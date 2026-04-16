@@ -1,0 +1,1831 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eigen · Programa de Socio Formador · Semestre Tec 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F5F2EA;
+    --paper-deep: #EDE8DB;
+    --ink: #14110D;
+    --ink-soft: #3A352C;
+    --ink-mute: #736B5C;
+    --rule: #C8BFAC;
+    --rule-soft: #D9D1BE;
+    --accent: #6B1F1F;
+    --accent-warm: #A34D2A;
+    --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --sans: "Inter Tight", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--paper); color: var(--ink); }
+  body {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    font-feature-settings: "ss01","cv11";
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(107,31,31,0.03), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(163,77,42,0.03), transparent 40%);
+    min-height: 100vh;
+  }
+  .page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 64px 56px 96px;
+  }
+
+  /* Masthead */
+  .masthead {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 10px;
+  }
+  .brand {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 34px;
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 80, "SOFT" 30;
+  }
+  .brand em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .masthead-meta {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    line-height: 1.8;
+  }
+  .sub-rule {
+    height: 3px;
+    background: var(--ink);
+    margin-bottom: 4px;
+  }
+  .sub-rule + .sub-rule {
+    height: 1px;
+    margin-bottom: 40px;
+  }
+
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 56px;
+    padding: 16px 0 48px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 48px;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(42px, 5.5vw, 68px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    font-variation-settings: "opsz" 144, "SOFT" 20;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 300;
+  }
+  .hero-lede {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    font-weight: 300;
+    padding-top: 8px;
+    font-variation-settings: "opsz" 20;
+  }
+  .hero-lede p + p { margin-top: 14px; }
+
+  /* Overview strip */
+  .overview {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 72px;
+  }
+  .overview > div {
+    padding: 20px 22px 22px;
+    border-right: 1px solid var(--rule);
+  }
+  .overview > div:last-child { border-right: none; }
+  .ov-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+  }
+  .ov-value {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    font-variation-settings: "opsz" 80;
+  }
+  .ov-value small {
+    display: block;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ink-mute);
+    margin-top: 6px;
+    letter-spacing: 0;
+  }
+
+  /* Section title */
+  .section-title {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .section-title .kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .section-title h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 80;
+  }
+  .section-title .trail {
+    border-top: 1px solid var(--ink);
+    height: 1px;
+    align-self: center;
+  }
+
+  /* Profile card */
+  .profile {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 40px;
+    padding: 36px 0 40px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .profile:last-of-type { border-bottom: 1px solid var(--ink); }
+
+  .profile .num {
+    font-family: var(--serif);
+    font-size: 72px;
+    font-weight: 300;
+    line-height: 0.9;
+    color: var(--ink);
+    font-variation-settings: "opsz" 144;
+    padding-top: 6px;
+    font-style: italic;
+  }
+  .profile .num span {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-style: normal;
+    margin-top: 8px;
+  }
+
+  .profile .body {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 44px;
+  }
+  .profile h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    margin-bottom: 6px;
+    font-variation-settings: "opsz" 80;
+  }
+  .profile h3 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .profile .tagline {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+    font-variation-settings: "opsz" 20;
+  }
+  .profile p.description {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .profile .deliverable {
+    font-family: var(--serif);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ink);
+    padding: 16px 18px;
+    background: var(--paper-deep);
+    border-left: 2px solid var(--accent);
+    margin-top: 10px;
+    font-variation-settings: "opsz" 20;
+  }
+  .profile .deliverable strong {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* Sidebar facts */
+  .facts { font-family: var(--mono); font-size: 12px; }
+  .facts dl { display: grid; gap: 14px; }
+  .facts dt {
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 3px;
+  }
+  .facts dd {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .facts .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .chip {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    padding: 3px 8px 4px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+  .chip.solid {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  /* Stack intro */
+  .stack-intro {
+    max-width: 820px;
+    margin: 0 0 56px;
+  }
+  .stack-intro p {
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    font-weight: 300;
+    font-variation-settings: "opsz" 30;
+  }
+  .stack-intro em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .mono-inline {
+    font-family: var(--mono);
+    font-size: 0.9em;
+    background: var(--paper-deep);
+    padding: 1px 6px 2px;
+    border: 1px solid var(--rule);
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+
+  /* Catalog */
+  .catalog {
+    border-top: 1px solid var(--ink);
+    margin-bottom: 72px;
+  }
+  .cat-block {
+    padding: 32px 0 34px;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 48px;
+  }
+  .cat-block:last-child { border-bottom: 1px solid var(--ink); }
+  .cat-block .cat-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-top: 6px;
+    line-height: 1.4;
+  }
+  .cat-block ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .cat-block ol li {
+    position: relative;
+    padding-left: 44px;
+    padding-right: 8px;
+    margin-bottom: 18px;
+    font-family: var(--sans);
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .cat-block ol li::before {
+    content: counter(list-item, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 3px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--ink-mute);
+    width: 32px;
+  }
+  .cat-block ol li strong {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-style: italic;
+    color: var(--ink);
+    font-size: 16px;
+    font-variation-settings: "opsz" 40;
+  }
+  @media (max-width: 880px) {
+    .cat-block { grid-template-columns: 1fr; gap: 18px; }
+    .cat-block ol li { padding-left: 36px; font-size: 14px; }
+  }
+
+  /* Activities */
+  .activities {
+    margin-bottom: 72px;
+    border-top: 1px solid var(--ink);
+  }
+  .act-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 40px;
+    padding: 32px 0 32px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .act-row:last-child { border-bottom: 1px solid var(--ink); }
+  .act-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 52px;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--accent);
+    font-variation-settings: "opsz" 144;
+    padding-top: 4px;
+  }
+  .act-body h4 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: -0.015em;
+    margin-bottom: 20px;
+    font-variation-settings: "opsz" 80;
+  }
+  .act-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 44px;
+  }
+  .act-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .act-body ul {
+    list-style: none;
+    padding: 0;
+  }
+  .act-body li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  .act-body li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent);
+    font-family: var(--serif);
+  }
+
+  /* Cross-cutting stack */
+  .cross-stack {
+    background: var(--paper-deep);
+    padding: 40px 40px 44px;
+    margin-bottom: 72px;
+    border-left: 3px solid var(--ink);
+  }
+  .cs-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+  }
+  .cs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  .cs-grid h5 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+    font-variation-settings: "opsz" 40;
+  }
+  .cs-grid ul {
+    list-style: none;
+    padding: 0;
+  }
+  .cs-grid li {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  @media (max-width: 880px) {
+    .act-row { grid-template-columns: 1fr; gap: 16px; }
+    .act-grid { grid-template-columns: 1fr; gap: 28px; }
+    .cross-stack { padding: 28px 22px; }
+    .cs-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+  }
+
+  /* Architectures */
+  .architectures {
+    border-top: 1px solid var(--ink);
+    margin-bottom: 72px;
+  }
+  .arch {
+    padding: 40px 0 44px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .arch:last-child { border-bottom: 1px solid var(--ink); }
+
+  .arch-head {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .arch-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 48px;
+    line-height: 1;
+    color: var(--accent);
+    font-variation-settings: "opsz" 144;
+    flex-shrink: 0;
+  }
+  .arch h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    font-variation-settings: "opsz" 80;
+  }
+  .arch-problem {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    font-weight: 300;
+    max-width: 900px;
+    margin-bottom: 28px;
+    font-variation-settings: "opsz" 30;
+  }
+  .arch-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 40px;
+    margin-bottom: 20px;
+  }
+  .arch-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .arch .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-content: flex-start;
+  }
+  .arch .chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px 5px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+  }
+  .arch .chip.solid {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .arch-flow {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--paper-deep);
+    border-left: 2px solid var(--accent);
+    padding: 16px 18px;
+    overflow-x: auto;
+    white-space: pre;
+    letter-spacing: 0;
+  }
+  .arch-note {
+    font-family: var(--serif);
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    padding: 14px 18px 16px;
+    background: rgba(107, 31, 31, 0.04);
+    border-top: 1px solid var(--rule);
+    font-variation-settings: "opsz" 20;
+  }
+  .arch-note strong {
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-right: 10px;
+  }
+  @media (max-width: 880px) {
+    .arch-grid { grid-template-columns: 1fr; gap: 24px; }
+    .arch-flow { font-size: 10.5px; }
+    .arch h3 { font-size: 24px; }
+    .arch-num { font-size: 36px; }
+  }
+
+  /* Terms footer */
+  .terms {
+    margin-top: 72px;
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: 56px;
+    padding-top: 40px;
+    border-top: 3px solid var(--ink);
+  }
+  .terms h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 38px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    font-variation-settings: "opsz" 96;
+  }
+  .terms h2 em { font-style: italic; color: var(--accent); }
+  .terms .kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .terms-grid {
+    display: grid;
+    gap: 22px;
+  }
+  .term-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .term-row:last-child { border-bottom: none; }
+  .term-row dt {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding-top: 4px;
+  }
+  .term-row dd {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.45;
+    color: var(--ink);
+    font-variation-settings: "opsz" 20;
+  }
+  .term-row dd small {
+    display: block;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink-mute);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* Colophon */
+  .colophon {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .colophon em {
+    font-family: var(--serif);
+    font-style: italic;
+    text-transform: none;
+    font-size: 13px;
+    letter-spacing: 0;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 880px) {
+    .page { padding: 40px 24px 64px; }
+    .hero { grid-template-columns: 1fr; gap: 24px; }
+    .overview { grid-template-columns: repeat(2, 1fr); }
+    .overview > div:nth-child(2) { border-right: none; }
+    .overview > div:nth-child(1),
+    .overview > div:nth-child(2) { border-bottom: 1px solid var(--rule); }
+    .profile { grid-template-columns: 1fr; gap: 16px; }
+    .profile .body { grid-template-columns: 1fr; gap: 28px; }
+    .profile .num { font-size: 48px; }
+    .terms { grid-template-columns: 1fr; gap: 32px; }
+    .term-row { grid-template-columns: 1fr; gap: 6px; }
+  }
+
+  @media print {
+    body { background: white; }
+    .page { max-width: 100%; padding: 24px; }
+    .profile { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="masthead">
+    <div class="brand">Eigen<em>.</em></div>
+    <div class="masthead-meta">
+      Programa Socio Formador<br>
+      Semestre Tec · Ago–Dic 2026<br>
+      <a href="./eigen-curriculum-cloudflare.html" style="color: var(--accent); text-decoration: none;">plan de estudios ↗</a> · <a href="./eigen-clase-cloudflare.html" style="color: var(--accent); text-decoration: none;">clase ↗</a> · <a href="./eigen-recetario.html" style="color: var(--accent); text-decoration: none;">recetario ↗</a>
+    </div>
+  </header>
+  <div class="sub-rule"></div>
+  <div class="sub-rule"></div>
+
+  <section class="hero">
+    <h1>Cinco retos<br>en <em>ingeniería aplicada</em><br>a negocios reales.</h1>
+    <div class="hero-lede">
+      <p>Eigen construye infraestructura de IA para empresas de servicios en México — clínicas, hoteles, farmacias. Un mismo framework, verticales distintos, clientes que pagan.</p>
+      <p>Ofrecemos cinco posiciones de Semestre Tec: cuatro en ingeniería y operaciones de producto, una en operación estratégica del negocio. Todos con stipend, mentoría directa del fundador y código que corre en producción desde el día quince.</p>
+    </div>
+  </section>
+
+  <section class="overview">
+    <div>
+      <div class="ov-label">Modalidad</div>
+      <div class="ov-value">Semestre Tec<small>16 semanas · inmersión completa</small></div>
+    </div>
+    <div>
+      <div class="ov-label">Formato</div>
+      <div class="ov-value">Remoto<small>Kickoff presencial en GDL</small></div>
+    </div>
+    <div>
+      <div class="ov-label">Stipend</div>
+      <div class="ov-value">$4,000 MXN<small>Mensuales · más bono de cierre</small></div>
+    </div>
+    <div>
+      <div class="ov-label">Posiciones</div>
+      <div class="ov-value">5<small>Individuales · 1 estudiante por reto</small></div>
+    </div>
+  </section>
+
+  <div class="section-title">
+    <span class="kicker">Parte I</span>
+    <h2>Los Retos</h2>
+    <span class="trail"></span>
+  </div>
+
+  <article class="profile">
+    <div class="num">01<span>Ingeniería</span></div>
+    <div class="body">
+      <div>
+        <h3>Módulos en <em>Eigen Atlas</em></h3>
+        <p class="tagline">Un framework, muchos verticales. Tú construyes los siguientes.</p>
+        <p class="description">Eigen Atlas es nuestro monorepo: módulos reutilizables que se componen en soluciones verticales para cada cliente. Construirás dos módulos nuevos de punta a punta — por ejemplo, el módulo de reservaciones y reporting para la cuenta de Cosalá Hotels. No es un sandbox académico: tu código corre en producción, con clientes que pagan revisando los entregables.</p>
+        <div class="deliverable">
+          <strong>Entregable</strong>
+          Uno o dos módulos integrados al framework Eigen, con suite de pruebas, documentación técnica y deployment productivo en Cloudflare.
+        </div>
+      </div>
+      <aside class="facts">
+        <dl>
+          <div><dt>Carrera objetivo</dt><dd>ITC · IIA</dd></div>
+          <div><dt>Stack</dt>
+            <dd class="chips">
+              <span class="chip solid">TypeScript</span>
+              <span class="chip">Cloudflare Workers</span>
+              <span class="chip">Hono</span>
+              <span class="chip">D1 · KV</span>
+              <span class="chip">Zod</span>
+              <span class="chip">Vitest</span>
+            </dd>
+          </div>
+          <div><dt>Competencias Tec21</dt><dd>Arquitectura de software · APIs · Testing · DevOps edge-native</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </article>
+
+  <article class="profile">
+    <div class="num">02<span>IA Aplicada</span></div>
+    <div class="body">
+      <div>
+        <h3>Ingeniería de <em>Agentes</em></h3>
+        <p class="tagline">Sistemas conversacionales con tool-use, memoria, y métricas de verdad.</p>
+        <p class="description">Diseñarás y entrenarás agentes LLM multi-paso que atienden pacientes y huéspedes en WhatsApp — con acceso a Google Calendar, Stripe, Supabase. No es prompt-chaining: es orquestación con evaluación empírica. Construirás el eval suite que mide calidad, no solo "el agente contestó algo".</p>
+        <div class="deliverable">
+          <strong>Entregable</strong>
+          Un agente vertical en producción (p.ej. Dr. Marcos o Cosalá) con suite de evaluación, observabilidad y documento de arquitectura.
+        </div>
+      </div>
+      <aside class="facts">
+        <dl>
+          <div><dt>Carrera objetivo</dt><dd>IIA · IDM</dd></div>
+          <div><dt>Stack</dt>
+            <dd class="chips">
+              <span class="chip solid">Claude API</span>
+              <span class="chip">Tool use</span>
+              <span class="chip">Prompt caching</span>
+              <span class="chip">TypeScript</span>
+              <span class="chip">Evals</span>
+            </dd>
+          </div>
+          <div><dt>Competencias Tec21</dt><dd>IA aplicada · Diseño conversacional · Evaluación empírica · Ingeniería de prompts</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </article>
+
+  <article class="profile">
+    <div class="num">03<span>Operaciones</span></div>
+    <div class="body">
+      <div>
+        <h3>Delivery &amp; <em>Project Ops</em></h3>
+        <p class="tagline">El pegamento entre Eigen, los clientes y el equipo técnico.</p>
+        <p class="description">Llevarás tres a cinco cuentas activas a la vez — stand-ups semanales con clientes, minutas, QA funcional antes de cada deploy, hand-off al equipo técnico. Lees código lo suficiente para saber cuándo algo está mal. El rol existe porque nuestros ingenieros no deberían redactar minutas, y nuestros clientes merecen a alguien que conteste en cinco minutos.</p>
+        <div class="deliverable">
+          <strong>Entregable</strong>
+          Operación documentada de las cuentas de cliente: SLA de respuesta, runbook de QA, cadencia semanal establecida y auditable.
+        </div>
+      </div>
+      <aside class="facts">
+        <dl>
+          <div><dt>Carrera objetivo</dt><dd>ITD</dd></div>
+          <div><dt>Stack</dt>
+            <dd class="chips">
+              <span class="chip solid">Linear</span>
+              <span class="chip">Notion</span>
+              <span class="chip">Loom</span>
+              <span class="chip">Google Workspace</span>
+              <span class="chip">GitHub</span>
+            </dd>
+          </div>
+          <div><dt>Competencias Tec21</dt><dd>Gestión ágil · Comunicación con stakeholders · QA funcional · Documentación técnica</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </article>
+
+  <article class="profile">
+    <div class="num">04<span>Datos</span></div>
+    <div class="body">
+      <div>
+        <h3>Analytics &amp; <em>Client Reporting</em></h3>
+        <p class="tagline">Los dashboards que los clientes esperan todos los primeros del mes.</p>
+        <p class="description">Construirás el pipeline que genera reportes ejecutivos mensuales para cada cliente — Meta Ads de Dr. Porras, PostHog de la farmacia, ocupación de Cosalá — y las alertas internas que detectan anomalías antes que el cliente. SQL, un poco de Python, pero sobre todo criterio para decidir qué métrica importa y cómo contarla sin ruido.</p>
+        <div class="deliverable">
+          <strong>Entregable</strong>
+          Pipeline reutilizable de reportes mensuales, motor de anomaly detection y plantillas de dashboard productivas para todos los clientes actuales.
+        </div>
+      </div>
+      <aside class="facts">
+        <dl>
+          <div><dt>Carrera objetivo</dt><dd>IDM · IIA (perfil data)</dd></div>
+          <div><dt>Stack</dt>
+            <dd class="chips">
+              <span class="chip solid">SQL</span>
+              <span class="chip">Supabase</span>
+              <span class="chip">PostHog</span>
+              <span class="chip">Chart.js</span>
+              <span class="chip">Python</span>
+            </dd>
+          </div>
+          <div><dt>Competencias Tec21</dt><dd>Análisis de datos · Visualización · Storytelling con datos · Detección de anomalías</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </article>
+
+  <article class="profile">
+    <div class="num">05<span>Estrategia</span></div>
+    <div class="body">
+      <div>
+        <h3>Chief of Staff &mdash; <em>"Mini fundador"</em></h3>
+        <p class="tagline">El rol más inusual del programa. Y el más exigente.</p>
+        <p class="description">Mes uno: observas. Todas las llamadas, todo el Slack, todas las decisiones — sin intervenir. Mes dos y tres: tomas llamadas de seguimiento con clientes bajo supervisión, redactas propuestas, haces investigación de nuevos verticales. Mes cuatro: representas a Eigen en discovery y cierres de nuevos clientes. Firmas NDA, ves números, entras a conversaciones con doctores y dueños de hotel. El que acepte este reto sale del semestre con una versión real de "trabajé como chief of staff de una startup" en su currículum.</p>
+        <div class="deliverable">
+          <strong>Entregable</strong>
+          Un cliente nuevo cerrado personalmente, y el documento operativo completo del negocio Eigen (cadencias, procesos, playbooks, lecciones).
+        </div>
+      </div>
+      <aside class="facts">
+        <dl>
+          <div><dt>Carrera objetivo</dt><dd>ITD · IDM con perfil ejecutivo</dd></div>
+          <div><dt>Perfil</dt>
+            <dd class="chips">
+              <span class="chip solid">Honor roll</span>
+              <span class="chip">Escribe impecable</span>
+              <span class="chip">Executive presence</span>
+              <span class="chip">Discreto · NDA</span>
+            </dd>
+          </div>
+          <div><dt>Competencias Tec21</dt><dd>Estrategia de negocio · Liderazgo · Toma de decisiones bajo incertidumbre · Storytelling comercial</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </article>
+
+  <div class="section-title">
+    <span class="kicker">Parte II</span>
+    <h2>Catálogo de actividades</h2>
+    <span class="trail"></span>
+  </div>
+
+  <section class="stack-intro">
+    <p>El stack de Eigen sigue la frontera actual de la plataforma de Cloudflare — incluyendo lo anunciado esta misma semana en <em>Agents Week 2026</em> (días 1–3, del 13 al 15 de abril): Durable Object Facets, Dynamic Workers, Sandboxes GA con identity-aware auth, CLI unificado <span class="mono-inline">cf</span>, Local Explorer, Cloudflare Mesh + Workers VPC, servidores MCP remotos, Workflows durables en GA, catálogo expandido de modelos (Claude 4.6, GPT-5.4, Llama, Mistral), Agents SDK next edition con <em>Think</em>, Agent Lee, Registrar API, Browser Run con Human-in-the-Loop, y Outbound Workers para Sandboxes. Lo que el estudiante toca aquí es lo que este mismo trimestre está tocando un ingeniero en San Francisco o Berlín.</p>
+  </section>
+
+  <section class="catalog">
+
+    <div class="cat-block">
+      <div class="cat-label">A · Plataforma edge &amp; compute</div>
+      <ol>
+        <li><strong>Servicios HTTP sobre Cloudflare Workers con Hono</strong> — middleware, routing anidado, typing estricto de extremo a extremo. Cada módulo corre en ~330 PoPs globales con tiempo de arranque en milisegundos.</li>
+        <li><strong>Uso del nuevo CLI unificado <span class="mono-inline">cf</span></strong> liberado en Agents Week (abril 2026) para despliegues, secretos, bindings y ~3,000 operaciones de API desde una sola herramienta coherente — reemplazando el patchwork de Wrangler + dashboard manual.</li>
+        <li><strong>Depuración local con Local Explorer</strong>, la herramienta recién GA para inspeccionar D1, KV, Durable Objects y Queues en ambiente de desarrollo sin tener que chequear en producción.</li>
+        <li><strong>Gestión de environments</strong> (staging, production), promociones entre ambientes, y rollbacks instantáneos con un solo comando.</li>
+        <li><strong>Uso de Workers Static Assets</strong> para servir frontends y SPAs desde el mismo Worker que sirve la API — sin CORS, sin deploys separados, sin bucket externo.</li>
+      </ol>
+    </div>
+
+    <div class="cat-block">
+      <div class="cat-label">B · Persistencia y datos</div>
+      <ol start="6">
+        <li><strong>Modelado de esquemas en D1</strong> (SQLite edge distribuido): migraciones versionadas con <span class="mono-inline">cf d1 migrations</span>, consultas con window functions y CTEs sobre datos productivos.</li>
+        <li><strong>KV para sesiones, caches de baja latencia y feature flags</strong>, entendiendo su modelo de eventual consistency y cuándo es la herramienta equivocada.</li>
+        <li><strong>R2 para almacenamiento de archivos</strong> (cero egress fees), con URLs firmadas para descargas directas desde el cliente.</li>
+        <li><strong>Durable Objects para estado consistente por entidad</strong> — un DO por paciente, por huésped, por conversación. Strong consistency, storage co-located con cómputo.</li>
+        <li><strong>Durable Object Facets</strong> (beta liberada abril 2026): instanciar DOs con bases SQLite aisladas por entidad dinámica, permitiendo que cada app/tenant tenga su propia base sin pre-provisionamiento. Pieza clave para construir plataformas multi-tenant.</li>
+        <li><strong>Hyperdrive</strong> para conexiones aceleradas a Postgres externo (Supabase, Neon) desde Workers, sin cold starts de pool ni latencia adicional.</li>
+        <li><strong>Queues para trabajos asíncronos confiables</strong> — reintentos con backoff, dead-letter queues, consumo batch, idempotencia.</li>
+        <li><strong>Workflows durables</strong> (con mejoras GA en abril 2026) para pipelines multi-paso que sobreviven reinicios, timeouts y fallas intermitentes — el reemplazo correcto de "cron + scripts".</li>
+      </ol>
+    </div>
+
+    <div class="cat-block">
+      <div class="cat-label">C · Agentes de IA y LLMs</div>
+      <ol start="14">
+        <li><strong>Integración de la API de Claude</strong> con tool use, prompt caching (TTL de 5 min y 1 h), memoria externa, y contextos extendidos de 1 M tokens cuando el caso lo justifica.</li>
+        <li><strong>Diseño de tools que el agente invoca</strong>: agendar en Google Calendar, cobrar vía Stripe, buscar en Supabase, hacer broadcast por WhatsApp Cloud API. Aquí está el 80% del oficio — un agente sin buenas herramientas es un bot de chat.</li>
+        <li><strong>Dynamic Workers</strong>: cargar código generado por LLM en runtime, ejecutarlo aislado, y persistir estado con Facets. Habilita la clase de productos "platform + AI" donde los usuarios generan mini-apps dentro de tu app.</li>
+        <li><strong>Cloudflare Sandboxes</strong> (lanzadas abril 2026): entornos aislados persistentes con shell, filesystem y procesos background, que inician bajo demanda y retoman exactamente donde quedaron. Útiles para agentes que ejecutan código arbitrario o scripts de usuario.</li>
+        <li><strong>Workers AI para inferencia local</strong> de modelos open-source (embeddings, reranking, generación pequeña) sin salir de la red de Cloudflare, con los nuevos soportes GA de structured outputs, tool calling nativo y contextos largos.</li>
+        <li><strong>Catálogo expandido de modelos</strong> (incluyendo GPT-5.4 agregado este mes, Claude Opus 4.6, Gemini, Llama, Mistral) — todos tras la misma interfaz de Workers AI, lo que permite comparar y rutear por costo/latencia.</li>
+        <li><strong>Vectorize para memoria semántica</strong> — búsquedas por similitud, recomendaciones, detección de anomalías y contexto persistente para agentes.</li>
+        <li><strong>AI Gateway para ruteo y observabilidad</strong> de llamadas a LLMs: caching, rate limiting, logging de prompts y atribución de costo por modelo/feature.</li>
+        <li><strong>Servidores MCP remotos</strong> (Model Context Protocol) hospedados sobre Workers para exponer herramientas a agentes externos (Claude Desktop, Cursor, Copilot) con autenticación OAuth y rate limiting por cliente.</li>
+        <li><strong>Eval suites rigurosas</strong>: conjunto de casos de prueba reales, rúbricas de evaluación, detección de regresiones cuando cambias prompt o modelo. Medir accuracy, latency, cost — la diferencia entre "ingeniería de IA" y "ingeniería de prompts".</li>
+      </ol>
+    </div>
+
+    <div class="cat-block">
+      <div class="cat-label">D · Seguridad y acceso</div>
+      <ol start="24">
+        <li><strong>API tokens scannable</strong> (GA abril 2026): emisión, rotación y detección automática cuando un token se filtra a un repositorio público.</li>
+        <li><strong>Permisos resource-scoped</strong> (GA abril 2026): darle a cada Worker, agente o usuario únicamente los permisos mínimos que necesita. Zero-trust real, verificable en CI.</li>
+        <li><strong>OAuth apps internas</strong> con la nueva visibilidad GA — qué tokens existen, quién los ha usado, cuándo. Auditoría sin hojas de cálculo.</li>
+        <li><strong>Cloudflare Mesh + Workers VPC</strong> (lanzados este mes): dar a agentes acceso privado a bases y APIs internas sin tunneles manuales ni VPNs frágiles. El reemplazo correcto de "abramos el firewall un ratito".</li>
+        <li><strong>Gestión de secretos</strong> con <span class="mono-inline">cf secret</span> y variables por environment — nunca hardcodear credenciales, nunca commitear <span class="mono-inline">.env</span>.</li>
+      </ol>
+    </div>
+
+    <div class="cat-block">
+      <div class="cat-label">E · Pagos, canales y backoffice</div>
+      <ol start="29">
+        <li><strong>Integración con Stripe</strong> para cobros únicos y subscripciones: webhooks verificados criptográficamente, idempotencia de eventos, manejo de chargebacks y reembolsos.</li>
+        <li><strong>Integración con Google Calendar vía OAuth2</strong>: flow completo (consent → access token → refresh token), diferencia entre cuentas personales y Workspace, revocación y recuperación de refresh tokens perdidos.</li>
+        <li><strong>WhatsApp Cloud API</strong> directo o vía ManyChat para mensajería masiva y conversacional: templates aprobados, mensajes con media, webhooks entrantes, rate limits de Meta.</li>
+        <li><strong>Arquitectura correcta de ManyChat</strong> con Dynamic Content (no External Request, que cachea mal) para lógica conversacional que ManyChat no soporta nativamente.</li>
+        <li><strong>Supabase como DB operacional</strong> para algunos verticales: Row Level Security para multi-tenant, triggers para auditoría, edge functions cuando tiene sentido.</li>
+      </ol>
+    </div>
+
+    <div class="cat-block">
+      <div class="cat-label">F · Calidad, observabilidad y oficio</div>
+      <ol start="34">
+        <li><strong>Tests unitarios y de integración</strong> con Vitest + Miniflare, corriendo el Worker localmente contra mocks de D1, KV y R2, con coverage que sirve de contrato.</li>
+        <li><strong>Captura de errores con Sentry</strong> (integración nativa con Workers) y síntomas UX con PostHog — distinguiendo errores fatales, warnings de negocio y ruido ignorable.</li>
+        <li><strong>Triage de incidentes</strong>: qué es bug real, qué es flaky, qué escala al on-call, qué se responde directamente al cliente sin abrir ticket.</li>
+        <li><strong>Code review con PRs chicos</strong> (&lt;300 líneas), commits legibles en formato convencional, checks de CI que bloquean merges si fallan.</li>
+        <li><strong>Documentación técnica viva</strong>: ADRs (Architecture Decision Records), runbooks de incidentes, postmortems honestos sin blame.</li>
+        <li><strong>Observabilidad-primero</strong>: correlation IDs, trace spans y métricas custom antes de declarar un feature "done". Si no se puede medir en producción, no está terminado.</li>
+      </ol>
+    </div>
+
+    <div class="cat-block">
+      <div class="cat-label">G · Operación de clientes y proyectos</div>
+      <ol start="40">
+        <li><strong>Coordinación paralela de 3–5 cuentas activas</strong> (clínicas, hoteles, farmacias) con stand-ups semanales, minutas accionables y SLA de respuesta documentado y auditado.</li>
+        <li><strong>Documentación viva por cuenta en Notion</strong>: decisiones, compromisos, riesgos, próximos pasos. Una página por cliente que cualquiera puede leer en cinco minutos y entender el estado completo.</li>
+        <li><strong>Ritmo semanal con clientes</strong>: agenda preparada, preguntas escritas, hand-off al equipo técnico, follow-up por escrito en menos de 24 horas.</li>
+        <li><strong>QA funcional antes de cada release</strong> con checklists de smoke test y happy-path; automatizar lo repetitivo para poder revisar a fondo lo nuevo.</li>
+        <li><strong>Triage de Sentry y PostHog</strong>: qué convierte en ticket en Linear, qué responde el equipo directamente al cliente, qué se ignora activamente.</li>
+      </ol>
+    </div>
+
+    <div class="cat-block">
+      <div class="cat-label">H · Datos, reporting y analytics</div>
+      <ol start="45">
+        <li><strong>SQL productivo</strong>: CTEs, window functions, time-series, agregaciones para métricas de negocio (revenue, conversion, retention, cohorts).</li>
+        <li><strong>Extracción de datos heterogéneos</strong> (Meta Ads API, PostHog, Sentry, Stripe, WhatsApp, Supabase) y normalización en un modelo semántico común.</li>
+        <li><strong>Dashboards HTML interactivos</strong> con Chart.js, filtros por dropdown, distribución como archivos self-contained que el cliente abre desde el email sin login ni VPN.</li>
+        <li><strong>Alertas de anomalía</strong> con umbrales adaptativos: caída de conversión, CPA fuera de rango, errores en picos — escaladas automáticamente al canal correcto.</li>
+        <li><strong>Automatización de reportes mensuales</strong> con Workers + Queues cron-triggered, entrega por email o WhatsApp, versionado de snapshots históricos.</li>
+        <li><strong>Catálogo de métricas versionado</strong>: cada métrica tiene dueño, fórmula y fuente escrita — acabando con "depende quién pregunte".</li>
+      </ol>
+    </div>
+
+    <div class="cat-block">
+      <div class="cat-label">I · Plataforma extendida de Cloudflare</div>
+      <ol start="51">
+        <li><strong>Browser Rendering API</strong> — Chrome headless hospedado en la red de Cloudflare, invocable desde un Worker para capturar screenshots de dashboards ejecutivos, renderizar PDFs de reportes, hacer scraping estructurado de sitios que requieren JS, y automatizar pruebas end-to-end. Para Eigen: generar el PDF mensual de Dr. Porras directo desde el Worker, sin pagar un servicio externo de Puppeteer-as-a-service ni mantener un Chrome propio.</li>
+        <li><strong>Cloudflare Containers (beta, 2026)</strong> — workloads que no corren en el runtime V8 de Workers (Python con dependencias nativas, ffmpeg, Whisper, modelos ML custom, scripts que necesitan un POSIX real) se ejecutan en contenedores aislados con integración nativa a Workers, D1, R2 y Durable Objects. Para Eigen: transcribir audio de llamadas con Whisper, correr OCR sobre recetas médicas, transformar video de huéspedes — sin salir de la red de Cloudflare ni incurrir en egress fees de AWS.</li>
+        <li><strong>Analytics Engine</strong> — base de datos time-series integrada, accesible desde Workers con <span class="mono-inline">env.ANALYTICS.writeDataPoint(...)</span>; escribe métricas custom a escala masiva (millones de puntos por segundo) y se consulta con SQL. Para Eigen: medir latencia por tool-call de agente, conversiones por vertical, uso por cliente — todo sin montar Grafana externo ni pagar Datadog.</li>
+        <li><strong>R2 Data Catalog</strong> (Iceberg tables, 2026) — capa analítica sobre R2 con metadata catalog administrado por Cloudflare, consultable directamente por Snowflake, DuckDB, Spark o ClickHouse a través de JDBC/HTTP. Para Eigen: almacenar eventos históricos de todos los verticales (visitas, reservas, transacciones, sesiones de chat) como datos analíticos open-format sin mover información entre clouds ni pagar licencias.</li>
+        <li><strong>Cloudflare Pipelines</strong> (2026) — ingesta HTTP de eventos con buffering automático, batching, transformaciones inline y persistencia final a R2 o Data Catalog. Es el reemplazo correcto de Kinesis Firehose y Kafka administrado, sin ZooKeeper, sin cluster, sin operación. Para Eigen: capturar cada evento de agente, cada click en landings, cada webhook de ManyChat, en un solo pipeline declarativo que alimenta el analytics stack.</li>
+        <li><strong>Email Workers</strong> — procesar correos entrantes con un Worker en lugar de servidor IMAP propio. Recibes el mensaje crudo MIME, lo parseas, clasificas y respondes automáticamente con lógica completa. Para Eigen: la bandeja <span class="mono-inline">contacto@drmarcos.com</span> atendida por un agente LLM que clasifica por intención (agendar, cobrar, urgencia), responde de forma natural y escala al humano solo cuando detecta ambigüedad o sensibilidad.</li>
+        <li><strong>Email Routing</strong> — ruteo de direcciones custom (<span class="mono-inline">doctor@tudominio.com</span> → Gmail personal) sin montar MX records, sin Zoho, sin Google Workspace. Soporta reenvío selectivo por regex, forwards a Email Workers para procesamiento programable, y alias ilimitados por dominio.</li>
+        <li><strong>Turnstile</strong> — alternativa privacy-first a reCAPTCHA que no guarda cookies ni rastrea usuarios con fingerprinting. Funciona invisible en la mayoría de casos (challenge transparente), con fallback visual solo cuando detecta comportamiento sospechoso. Para Eigen: proteger formularios de leads en landings de doctores y hoteles sin degradar la tasa de conversión ni depender de Google.</li>
+        <li><strong>Cloudflare Access (Zero Trust)</strong> — SSO empresarial para aplicaciones internas sin montar Auth0 ni Okta. Configuras que <span class="mono-inline">admin.eigen.dev</span> solo deja entrar a gente con email <span class="mono-inline">@eigen.dev</span>, con MFA obligatoria, políticas por path, auditoría completa y sesiones con TTL configurable. Para Eigen: proteger dashboards internos de operación, admin panels de cada cliente, servicios de staging — todo sin escribir una línea de auth propia.</li>
+        <li><strong>Cloudflare Gateway (Zero Trust)</strong> — filtro DNS y HTTP para la red del equipo: bloquea phishing, malware y sitios no autorizados; inspección TLS; políticas por usuario o grupo; logs de navegación para compliance. Relevante cuando Eigen empiece a contratar gente con acceso a datos sensibles de clientes médicos o financieros.</li>
+        <li><strong>Workers Logs</strong> (GA) — logging nativo de Workers con retención de 3 a 7 días, búsqueda por correlation ID, filtros por status/endpoint/error, acceso vía dashboard y API. Complementa Sentry para los casos donde no quieres exportar cada log fuera de Cloudflare (p.ej. logs que contienen PII médico o de pago).</li>
+        <li><strong>Tail Workers</strong> — un Worker que recibe en vivo los eventos de ejecución de otros Workers (logs, traces, errores, métricas) y los procesa programáticamente. Para Eigen: pipeline de observabilidad custom que envía solo errores críticos a Slack, spans de trace a Honeycomb, métricas de latencia a Analytics Engine, y compacta el resto en R2 para auditoría.</li>
+        <li><strong>Zaraz</strong> — tag manager server-side que corre en el edge: GA4, Meta Pixel, TikTok Pixel, Hotjar, LinkedIn Insight — todos configurados una vez en Zaraz, ejecutándose desde el Worker en lugar del browser del usuario. Para Eigen: landings de cliente con tracking completo de conversión sin cargar 15 scripts de terceros que bajan PageSpeed y violan políticas de privacidad.</li>
+        <li><strong>Smart Placement</strong> — Cloudflare decide automáticamente en qué PoP ejecutar tu Worker para minimizar latencia hacia los backends que usa. Si tu Worker llama Supabase en <span class="mono-inline">us-east-1</span>, Smart Placement lo coloca cerca de ahí aunque el usuario final esté en Ciudad de México. Relevante cuando el tiempo de ida-y-vuelta al backend domina la latencia total (común con DB externa).</li>
+        <li><strong>Versioned Deploys + Gradual Rollouts</strong> — cada deploy tiene versión inmutable con ID propio, puedes hacer rollouts progresivos (5% → 25% → 100%), rollback instantáneo a cualquier versión anterior, y pruebas A/B entre versiones con ruteo determinístico por usuario. Para Eigen: desplegar el cambio del agente de Dr. Marcos al 10% de pacientes, observar las evals y métricas de satisfacción, y solo pasar a 100% si no hay regresión.</li>
+        <li><strong>Cron Triggers</strong> — Workers que se ejecutan en horarios definidos sin HTTP, invocados por el scheduler nativo de Cloudflare (cron syntax estándar). Hasta 1,000 cron jobs por cuenta sin infraestructura adicional, sin EC2 con cron, sin Celery beat. Para Eigen: generar reportes mensuales, enviar recordatorios diarios, compactar logs, todo declarativo en <span class="mono-inline">wrangler.toml</span> o <span class="mono-inline">cf.toml</span>.</li>
+        <li><strong>Service Bindings</strong> — un Worker llama a otro Worker sin cruzar la red (cero latencia, cero costo adicional) vía bindings tipados. Sustituye el patrón "microservicios vía HTTP interno" por invocaciones directas con typesafety end-to-end. Para Eigen: el Worker de "agente" llama al Worker de "billing" y al Worker de "calendar" como si fueran funciones locales.</li>
+        <li><strong>Workers for Platforms</strong> (dispatch namespaces) — hospedar código de cliente aislado en tu propia red: cada cliente tiene su propio Worker bajo un dispatcher común, con aislamiento fuerte, límites configurables, y deploys independientes. Es la primitiva que habilita construir un SaaS donde tus propios usuarios (hoteleros, clínicas) pueden escribir lógica custom sobre tu plataforma. Potencialmente el cimiento de "Eigen Atlas como plataforma".</li>
+        <li><strong>WebSockets + Durable Objects Hibernation</strong> — WebSockets persistentes hasta millones de conexiones concurrentes con hibernación automática (no acumulas billing mientras el socket está idle, y el DO despierta cuando llega actividad). Para Eigen: features en vivo cuando aplique — dashboards que se actualizan en tiempo real, conversaciones con typing indicators, notificaciones push a cliente sin polling.</li>
+      </ol>
+    </div>
+
+    <div class="cat-block">
+      <div class="cat-label">J · Resto de la plataforma de Cloudflare</div>
+      <ol start="69">
+        <li><strong>WAF (Web Application Firewall)</strong> — reglas managed que cubren el OWASP Top 10 + reglas custom escritas en Wirefilter (lenguaje tipo BPF), modos simulate/log/block por regla, análisis en vivo de tráfico por país/ASN/path. Para Eigen: proteger landings y APIs sin escribir middleware propio, compliance básico para clientes médicos.</li>
+        <li><strong>Bot Management</strong> — detección de bots con modelos ML entrenados sobre el tráfico agregado de Cloudflare, asignando un bot score (1-99) por request, con rate limiting adaptativo por reputación IP y distinción sofisticada entre scrapers legítimos (Google, GPTBot autorizados) y hostiles (credential stuffing, inventory hoarding).</li>
+        <li><strong>DDoS Protection avanzado</strong> — mitigación automática L3/L4/L7 sin configuración, Advanced TCP Protection contra ataques sofisticados, historial de ~200 Tbps de capacidad neta — suficiente para absorber ataques de nivel nation-state sin degradar servicio.</li>
+        <li><strong>Rate Limiting nativo</strong> — rate limiting configurable por URL, header, cookie, país o IP con ventanas slide y burst control, sin escribir una línea de Worker. Soporta rate limiting por combinación de atributos (p.ej. "100 requests por IP por hora para <span class="mono-inline">/login</span> con status 401").</li>
+        <li><strong>Page Shield</strong> — detecta scripts de terceros modificados sospechosamente en el cliente (ataque Magecart, card skimming), esencial para compliance PCI DSS 4.0 en landings que reciben pagos. Alerta si un tercero inyecta código inesperado.</li>
+        <li><strong>API Shield</strong> — validación de schema OpenAPI por request, JWT validation en el edge, discovery automático de endpoints no documentados, abuse detection específico para APIs (secuencias anómalas, enumeración de IDs). Para Eigen: cada API pública de cliente pasa por schema guard.</li>
+        <li><strong>mTLS (mutual TLS)</strong> — certificados de cliente verificados en el edge antes de que el request llegue al Worker, ideal para comunicación server-to-server, APIs B2B y webhook authentication sin compartir tokens.</li>
+        <li><strong>Magic Transit</strong> — BGP advertising de tus propios prefijos IP hacia Cloudflare, protección DDoS L3/L4 transparente para infraestructura no-HTTP (servidores de juego, VoIP, IoT). El tráfico regresa al origen limpio vía GRE tunnel o direct connect.</li>
+        <li><strong>Magic WAN</strong> — SD-WAN as a service: conexiones cifradas entre oficinas, clouds y data centers usando la red de Cloudflare como backbone global privado, con políticas de ruteo y seguridad uniformes.</li>
+        <li><strong>Spectrum</strong> — proxy TCP/UDP para protocolos no-HTTP (SSH, RDP, Minecraft, MQTT, proprietary), con protección DDoS, ruteo Anycast y acceso zero-trust vía Access. Ideal cuando tienes servicios legacy que no hablan HTTP pero necesitan exponerse seguros.</li>
+        <li><strong>Argo Smart Routing</strong> — ruteo dinámico de requests vía la red privada de Cloudflare hacia tus backends, evitando peering points congestionados. Típicamente reduce latencia p50 un 30% y p99 un 40% para rutas internacionales.</li>
+        <li><strong>Load Balancing</strong> — balanceo geo-aware con health checks HTTP/TCP, weight por pool, failover automático entre regiones, session affinity por cookie/header, Monitors con alertas. Sustituye ELB/ALB/GLB para arquitecturas multi-cloud.</li>
+        <li><strong>Cache Reserve + Tiered Cache</strong> — capa de cache permanente sobre R2 (Cache Reserve) + topología jerárquica edge→regional→origin (Tiered Cache) para aumentar hit ratio global y reducir carga en origen a prácticamente cero para contenido estático pesado.</li>
+        <li><strong>Cloudflare Images</strong> — storage + transformación on-the-fly (resize, crop, format conversion, WebP/AVIF/JPEG XL), CDN integrado, signing de URLs para acceso privado. Reemplaza Cloudinary/imgproxy/sharp-server con una línea de URL.</li>
+        <li><strong>Cloudflare Stream</strong> — video hosting con transcoding automático (HLS/DASH adaptive bitrate), player embebido con DRM opcional, live streaming con sub-segundo glass-to-glass, recording, analytics de viewing por segmento.</li>
+        <li><strong>Workers Calls (WebRTC SFU)</strong> — Selective Forwarding Unit para WebRTC a escala global, disponible desde Workers — construye videoconferencia, voz grupal o livestream interactivo sin montar Jitsi ni LiveKit propio. Billing por minuto de pista, no por servidor.</li>
+        <li><strong>AutoRAG</strong> (nuevo 2026) — RAG administrado end-to-end: subes documentos a R2, Cloudflare maneja ingestión, chunking, embedding, vector storage en Vectorize, retrieval y generación con Workers AI. Para casos donde no quieres mantener tu propio pipeline RAG.</li>
+        <li><strong>D1 read replicas</strong> (2026) — réplicas read-only en múltiples regiones para escalar lectura, con eventual consistency controlada y elección explícita de "read from replica" por query, ideal para dashboards y reportes.</li>
+        <li><strong>D1 Sessions API</strong> — consistent reads dentro de una sesión lógica para garantizar que lecturas posteriores a un write ven el write, crítico para flujos transaccionales sin perder la escalabilidad edge.</li>
+        <li><strong>R2 Event Notifications</strong> — dispara Workers, Queues o Pipelines cuando un objeto se crea, modifica o elimina en R2. Patrón clave para pipelines reactivos: "cuando suban un PDF, procésalo con OCR" en una línea de configuración.</li>
+        <li><strong>Realtime / Pub-Sub (MQTT)</strong> — broker MQTT distribuido en el edge para IoT, chat, telemetría y dashboards en vivo. Hasta millones de clientes concurrentes por tenant, con retención configurable y autenticación por cert o token.</li>
+        <li><strong>Durable Object Alarms</strong> — DOs con scheduler interno: el DO programa una alarma que se dispara en tiempo definido y ejecuta lógica (reintentar, cobrar, notificar). Es el reemplazo correcto de cron para workflows por-entidad ("a los 7 días del no-pago del paciente X, mándale recordatorio").</li>
+        <li><strong>Cloudflare for SaaS</strong> — custom hostnames para tus clientes (<span class="mono-inline">acme.tu-saas.com → acme.com</span>), con certificados TLS emitidos y rotados automáticamente por Cloudflare, soporte hasta 500,000 dominios por account, fallback DNS en caso de dominio primario caído. Indispensable si Eigen construye plataforma white-label.</li>
+        <li><strong>DNS autoritativo + Registrar + SSL</strong> — servidor DNS de Cloudflare (latencia p50 &lt;10ms globalmente, DNSSEC, GeoDNS, CAA records, DDNS), registrar de dominios al costo de mayorista sin markup, certificados gestionados (Universal + Advanced con wildcards y subdominios) con rotación automática.</li>
+        <li><strong>Logpush</strong> — exportación streaming de logs (HTTP requests, Workers Trace Events, Firewall Events, AI Gateway, Zero Trust) a destinos externos: S3, GCS, Azure Blob, Datadog, Splunk, Elasticsearch, Sumo Logic. Formato JSON batcheado con schema estable.</li>
+        <li><strong>Real User Monitoring (RUM) + DEX</strong> — métricas de Core Web Vitals (LCP, FID, CLS, INP) del tráfico real de tus sitios sin instrumentar JS, más Digital Experience Monitoring para sintetizar perceived performance desde ubicaciones globales simuladas.</li>
+        <li><strong>Workers OAuth Provider</strong> — librería oficial de Cloudflare para convertir tu Worker en OAuth 2.1 provider con PKCE, dynamic client registration (RFC 7591) y device flow. Usado como backbone del sistema de MCP remoto, pero aplica a cualquier API que quieras exponer a terceros con auth robusta.</li>
+        <li><strong>Arquitectura de Isolates V8 (fundamento)</strong> — cada Worker corre en un V8 isolate independiente: no container, no VM, arranque en menos de 5 ms, aislamiento de memoria fuerte entre tenants, y el modelo que hace posible ~50,000 QPS por PoP y sobrevender CPU sin degradar latencia. Entender este fundamento cambia cómo diseñas: cold starts no existen, pero tampoco hay procesos de background sin DO.</li>
+      </ol>
+    </div>
+
+    <div class="cat-block">
+      <div class="cat-label">K · Profundidad de Solutions Architect</div>
+      <ol start="95">
+        <li><strong>Cloudflare Tunnel (<span class="mono-inline">cloudflared</span>)</strong> — conexión saliente encriptada desde infraestructura on-prem o cloud privada hacia la red de Cloudflare, sin abrir puertos inbound ni montar VPN. Es cómo expones legacy servers, databases internas, o servicios en una VPC corporativa al mundo a través del edge. Combinado con Access, permite zero-trust a cualquier servicio TCP/UDP sin refactor.</li>
+        <li><strong>Primitivas del runtime de Workers</strong> — <span class="mono-inline">ctx.waitUntil()</span> para trabajo async después de responder (logs, analytics, cache warming); <span class="mono-inline">ctx.passThroughOnException()</span> para fallar suave y no romper el request; subrequests internos vía <span class="mono-inline">fetch()</span> a otros Workers; el ciclo de vida de handlers (fetch, scheduled, queue, email, tail, alarm) y cómo cada uno recibe context distinto. Son las primitivas que distinguen a un Solutions Architect de alguien que solo pega código.</li>
+        <li><strong>AI Gateway Guardrails</strong> — detección inline (antes de hablar al modelo, después de recibir respuesta) de PII, prompt injection, jailbreak attempts, lenguaje tóxico, y output constraint violations. Configurable por política: bloquear, redactar, alertar. Para Eigen: crítico en flujos médicos donde un paciente puede compartir sin querer su CURP o número de tarjeta en el chat.</li>
+        <li><strong>Workflows avanzado</strong> — steps atómicos con estado persistente automático entre reinicios, retries con backoff declarativo, sleep hasta timestamp específico, signals externos (<span class="mono-inline">workflow.signal("approved")</span>) para human-in-the-loop, y compensación estilo saga para flujos que deben "deshacerse" si falla un paso posterior. Para Eigen: el motor correcto de flujos de pago con aprobación manual, onboarding de cliente con pasos humanos, y agendas con confirmación diferida.</li>
+        <li><strong>Cloudflare Snippets + Transform Rules + Rulesets</strong> — modificaciones de request/response sin escribir Workers: Snippets para lógica JS ligera de ~5 KB, Transform Rules para header rewriting (CORS, CSP, security headers), y Rulesets como motor unificado de reglas compositable (WAF, Rate Limiting, Cache, Config todos hablan el mismo lenguaje). Para Eigen: A/B testing a nivel header, país-gating de landings, CSP dinámica por cliente — sin tocar código.</li>
+        <li><strong>Waiting Room</strong> — cola virtual administrada en el edge cuando un sitio enfrenta demanda mayor a su capacidad (apertura de citas, flash sale, launch de temporada). Usuarios esperan con una pantalla personalizada, pasan a la app en orden controlado, y el origen nunca se satura. Para Eigen: relevante cuando Cosalá abra reservaciones de temporada alta o cuando Dr. Marcos anuncie slots nuevos a lista de 3,000 pacientes.</li>
+        <li><strong>Authenticated Origin Pulls + Origin CA</strong> — el origen solo acepta requests con un certificado de cliente que Cloudflare firma privadamente, cerrando la puerta a que alguien bypass el edge y ataque el origen directamente. Origin CA emite certificados gratis válidos solo dentro de la red de Cloudflare. Complemento de WAF + mTLS para arquitecturas serias.</li>
+        <li><strong>Matriz de decisión KV vs DO vs D1 vs R2 vs Cache API</strong> — <span class="mono-inline">KV</span> para lecturas globales eventualmente consistentes a baja latencia (feature flags, config); <span class="mono-inline">Durable Objects</span> para estado consistente por entidad con lecturas locales; <span class="mono-inline">D1</span> para datos relacionales con SQL; <span class="mono-inline">R2</span> para blobs; <span class="mono-inline">Cache API</span> para cache HTTP programático por PoP. Un Solutions Architect es capaz de defender la elección con números (TTL, write QPS, tamaño, costo) y no por default. Esta pregunta viene en toda entrevista técnica seria.</li>
+        <li><strong>Patrones de compliance (HIPAA, PCI DSS 4.0, GDPR, LFPDPPP)</strong> — cómo combinar Cloudflare para cumplir: PII redaction en Logpush, encryption at rest en R2 con server-side KMS, data residency selectiva (US-only workers), audit trails immutables en R2 con Object Lock, Access policies con MFA y device posture para PHI, Page Shield para PCI DSS 4.0 sobre landings de pago. Extremadamente relevante porque Eigen opera con pacientes (datos médicos, LFPDPPP en México) y pagos (PCI).</li>
+      </ol>
+    </div>
+
+    <div class="cat-block">
+      <div class="cat-label">L · Novedades · Agents Week día 3 (15 abril 2026)</div>
+      <ol start="104">
+        <li><strong>Agents SDK · next edition (preview, 15 abr 2026)</strong> — la evolución del SDK pasa de "primitivas ligeras" a plataforma batteries-included. Incluye el framework <em>Think</em> para persistencia (agentes que sobreviven reinicios, retoman tareas de larga duración, conservan estado entre sesiones), starter con streaming chat, tools server y cliente, aprobación human-in-the-loop nativa, y scheduling de tareas. Cada agente es una clase TypeScript que corre sobre un Durable Object — con SQL propia, WebSockets y scheduler interno. Elimina el boilerplate de armar memoria, threading y scheduling desde cero.</li>
+        <li><strong>Agent Lee</strong> — agente in-dashboard de Cloudflare que reemplaza la navegación manual con un solo prompt. Usa TypeScript sandboxeado, conoce tu configuración de cuenta (Workers, zones, DNS, error rates), ejecuta herramientas reales contra DNS, Workers, SSL/TLS, R2, Registrar, Cache, Tunnel, API Shield. Ya está en producción sirviendo ~18,000 usuarios diarios y ~250k tool calls por día. Visión declarada: Agent Lee será eventualmente la interfaz completa de Cloudflare — dashboard, CLI, móvil — y pasará de reactivo a proactivo (te avisa cuando algo importante cambia en tu cuenta sin que preguntes).</li>
+        <li><strong>Cloudflare Registrar API (beta, 15 abr 2026)</strong> — compra de dominios programática: <span class="mono-inline">search()</span>, <span class="mono-inline">check availability</span>, <span class="mono-inline">register</span>. Accesible directamente desde editor, terminal o agente (Cursor, Claude Code, cualquier cliente MCP). Al estar dentro del API global de Cloudflare, ya es invocable vía el MCP oficial sin integración custom. Pricing at-cost (lo que cobra el registry, sin markup). Relevante para Eigen: agentes que provisionan dominios custom cuando onboardean un cliente nuevo (Cosalá adquiere un hotel → agente registra <span class="mono-inline">nuevohotel.com</span> + configura DNS + emite cert, todo desde conversación).</li>
+        <li><strong>Browser Run (renombrado GA de Browser Rendering)</strong> — la API de navegador headless evoluciona con cuatro capacidades nuevas anunciadas hoy: <em>Live View</em> (ver al agente trabajar en vivo), <em>Human-in-the-Loop</em> (cuando el agente topa con login o edge case, pasa control a humano que resuelve y devuelve), <em>Session Recordings</em> (replay con rrweb-player, inspección de DOM y console en cualquier punto del recording, accesibles desde dashboard o API), y <em>acceso CDP directo</em> (Chrome DevTools Protocol vía WebSocket, compatible con Puppeteer, Playwright y clientes MCP). Además 4× más concurrencia para agentes. Cambia qué es posible: automatización web con handover humano sin infra propia.</li>
+        <li><strong>Outbound Workers para Sandboxes</strong> — egress proxy programable zero-trust para Sandboxes y Containers. Los outbound handlers corren en el runtime de Workers <em>fuera</em> del sandbox, lo que les permite guardar secretos que el sandbox nunca ve. El código sandboxeado hace una request plana; las credenciales se inyectan transparentemente antes de reenviar upstream — sin exponer tokens al código no-confiable. Rotas el secret en el Worker y cada request lo usa inmediatamente. Complementado con: listas allow/deny con glob patterns, políticas dinámicas per-instance (<span class="mono-inline">setOutboundHandler()</span>, <span class="mono-inline">setOutboundByHost()</span> sin reiniciar), y TLS interception con CA efímera por instancia (la clave privada nunca sale del sidecar del container ni se comparte entre instancias). Pieza crítica de seguridad para agentes que ejecutan código generado por IA.</li>
+        <li><strong>Sandboxes · GA + identity-aware auth</strong> — los Sandboxes salieron de beta a GA esta semana con el stack de seguridad completo: auth dinámica identity-aware, TLS interception con CAs efímeras por instancia, filtering allow/deny, políticas de egress per-instance actualizables en vivo. La primitiva moderna para "computadora propia por agente" — aislamiento POSIX real que persiste estado entre invocaciones y arranca on-demand, ahora con governance de seguridad serio.</li>
+      </ol>
+    </div>
+
+    <div class="cat-block">
+      <div class="cat-label">M · Estrategia y oficio de negocio</div>
+      <ol start="110">
+        <li><strong>Redacción de propuestas comerciales</strong> (SOW), contratos y memos ejecutivos de una página que efectivamente consiguen el "sí" en vez de dormir en la bandeja del cliente.</li>
+        <li><strong>Investigación de verticales nuevos</strong>: tamaño de mercado, competencia, pricing, canales de adquisición, ciclos de venta típicos, barreras de entrada.</li>
+        <li><strong>Llamadas de discovery con prospectos</strong>: entrevista estructurada, notas en vivo, follow-up por escrito en menos de 24 horas — el arte olvidado de parecer profesional.</li>
+        <li><strong>Lectura de estados financieros básicos</strong>: márgenes, CAC, LTV, flujo de caja — no como ejercicio académico sino como lente para decidir precios, contrataciones y foco.</li>
+        <li><strong>Mantenimiento del "state of play"</strong> del negocio: documento vivo de compromisos, riesgos y próximos pasos, revisado cada lunes con el fundador.</li>
+      </ol>
+    </div>
+
+  </section>
+
+  <div class="section-title">
+    <span class="kicker">Parte III</span>
+    <h2>Arquitecturas de referencia</h2>
+    <span class="trail"></span>
+  </div>
+
+  <section class="stack-intro">
+    <p>Un Solutions Architect no memoriza productos: compone <em>patrones</em>. Estas son las diez arquitecturas que cubren el 90% de lo que Eigen construye sobre Cloudflare. Cada una resuelve un problema recurrente y combina productos específicos con una razón — y con trade-offs que vale la pena saber antes de implementar.</p>
+  </section>
+
+  <section class="architectures">
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">01</span>
+        <h3>Agente conversacional multicanal</h3>
+      </div>
+      <p class="arch-problem">Clientes B2C (pacientes, huéspedes) esperan atención 24/7 conversacional en WhatsApp con acceso real a agenda, pagos y escalamiento a humano. Un bot de flujos rígidos falla; un LLM sin herramientas ni memoria también.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip">WhatsApp Cloud API</span>
+            <span class="chip solid">Worker ingestor</span>
+            <span class="chip">Durable Object por conversación</span>
+            <span class="chip">Claude API · tool use · cache 1h</span>
+            <span class="chip">Vectorize (memoria)</span>
+            <span class="chip">Tools: Google Calendar · Stripe · Supabase</span>
+            <span class="chip">Workflows (transacciones)</span>
+            <span class="chip">Analytics Engine</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Usuario → WhatsApp → Worker (verifica firma)
+  → DO(conversationId).hydrate()
+     → carga contexto relevante de Vectorize
+     → llama Claude con prompt cacheado (1h)
+     → si Claude invoca tool:
+         Worker ejecuta → devuelve resultado a Claude
+     → DO persiste nuevo estado + mensaje
+  → respuesta outbound por WA API
+  → Analytics Engine registra latencia, tokens, satisfacción</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> DO por conversación da strong consistency y estado rico, pero over-engineered si hay menos de ~100 conversaciones concurrentes; en ese caso basta KV + Worker. El prompt caching es la diferencia entre $0.02 y $0.0003 por turno — impacta el modelo de negocio.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">02</span>
+        <h3>SaaS multi-tenant con código custom por cliente</h3>
+      </div>
+      <p class="arch-problem">Cada cliente (hotel, clínica) quiere lógica específica — descuentos, horarios, templates de mensajes, reglas de aprobación — pero mantener un fork por cliente no escala y obliga a un equipo de integración infinito.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip solid">Dispatcher Worker</span>
+            <span class="chip">Workers for Platforms · dispatch namespace</span>
+            <span class="chip">DO Facets · SQLite por tenant</span>
+            <span class="chip">Cloudflare for SaaS · custom hostname</span>
+            <span class="chip">Access · policy por tenant</span>
+            <span class="chip">Analytics Engine central</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Request → hostname tenant (acme.eigen.dev)
+  → Dispatcher Worker resuelve tenantId por hostname
+  → invoca Worker aislado en namespace del tenant
+     → usa DO Facet con SQLite exclusiva del tenant
+     → puede ejecutar código custom (subido por cliente o por Eigen)
+  → respuesta al usuario
+  → métricas homogéneas a Analytics Engine central</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> Workers for Platforms es caro a baja escala y exige disciplina de runtime bounds. Si solo tienes 3-5 tenants, un solo Worker con tenantId como variable es más simple. El salto a esta arquitectura se justifica a partir de ~20 tenants con divergencia real.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">03</span>
+        <h3>Pipeline analítico edge-nativo</h3>
+      </div>
+      <p class="arch-problem">Quieres eventos capturados, datos históricos consultables, y dashboards — sin Kafka, sin Snowflake, sin Airflow, sin ingenieros de datos dedicados.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip">Cloudflare Pipelines</span>
+            <span class="chip solid">R2 Data Catalog · Iceberg</span>
+            <span class="chip">Analytics Engine · near-realtime</span>
+            <span class="chip">DuckDB / ClickHouse (ad-hoc)</span>
+            <span class="chip">Workers · Chart.js dashboards</span>
+            <span class="chip">Logpush · destinos externos</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Eventos HTTP (clicks, webhooks, conversions)
+  → Pipeline ingesta (buffer + batch + transform)
+     ├─→ R2 Data Catalog (parquet + Iceberg meta)
+     └─→ Analytics Engine (métricas near-realtime)
+
+Queries:
+  - Analytics Engine (SQL) → Worker → dashboard HTML
+  - R2 Data Catalog → DuckDB/ClickHouse → reportes ejecutivos</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> Analytics Engine es perfecta para métricas dimensionales a alta cardinalidad (latencia por endpoint por tenant), pero no para joins complejos. R2 Data Catalog es excelente para analítica histórica pero agrega latencia de minutos. Combinarlas es la respuesta correcta.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">04</span>
+        <h3>App-per-usuario generada por IA (v0-style)</h3>
+      </div>
+      <p class="arch-problem">Usuarios describen en lenguaje natural una mini-app (dashboard, formulario, calculadora) y la quieren funcionando con persistencia propia, sin devs involucrados y sin compartir datos entre usuarios.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip">Claude API · code generation</span>
+            <span class="chip solid">Dynamic Workers</span>
+            <span class="chip">DO Facets · SQLite por app</span>
+            <span class="chip">Sandboxes · preview aislado</span>
+            <span class="chip">R2 · assets estáticos</span>
+            <span class="chip">Access · auth de usuario</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">User describe app → Worker envía prompt a Claude
+  → Claude genera código TS + schema SQLite
+  → Worker deploya via Dynamic Workers (isolate aislado)
+     → inicializa DO Facet con schema
+  → preview en Sandbox (URL temporal)
+  → al confirmar: publica a subdominio del user
+  → Access garantiza que solo el owner entra</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> Dynamic Workers + Facets (ambos beta) son la nueva primitiva ganadora. Antes habría requerido contenedores + DB per tenant + routing manual. La trampa: governance de código generado — necesitas Sandboxes y límites de CPU para evitar que un prompt hostil te haga bitcoin mining.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">05</span>
+        <h3>Backend híbrido Cloudflare + Postgres</h3>
+      </div>
+      <p class="arch-problem">Tu cliente ya tiene Postgres (Supabase, Neon, RDS) y no lo va a migrar. Tú quieres la velocidad edge de Workers sin pagar la latencia de conexión a Postgres en cada request.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip solid">Worker API</span>
+            <span class="chip">Hyperdrive · connection pool edge</span>
+            <span class="chip">Supabase / Neon / RDS</span>
+            <span class="chip">D1 · cache local</span>
+            <span class="chip">Queues · writes lentos</span>
+            <span class="chip">Smart Placement</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Request read:
+  Worker → D1 cache (hit ratio ~70%)
+     └─→ miss: Hyperdrive → Postgres → respuesta → cachea en D1
+
+Request write:
+  Worker valida → Queue (dedupe id)
+     → Consumer Worker → Hyperdrive → Postgres
+     → invalida D1 cache del recurso
+     → notifica al usuario vía WS o email</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> Hyperdrive elimina cold starts de pool pero no la latencia física al datacenter Postgres; Smart Placement ayuda colocando el Worker cerca. D1 como cache requiere disciplina de invalidación. Para tablas con high write frequency, el cache se vuelve ruido.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">06</span>
+        <h3>Intake inteligente de correo</h3>
+      </div>
+      <p class="arch-problem">Clientes reciben emails mezclados: citas, quejas, pagos, spam, facturación. Un humano clasifica y responde, o se pierden oportunidades por volumen.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip">Email Routing</span>
+            <span class="chip solid">Email Workers</span>
+            <span class="chip">Claude · clasificador + responder</span>
+            <span class="chip">Workflows · acciones multi-paso</span>
+            <span class="chip">Linear · ticket creation</span>
+            <span class="chip">Notion · archivo</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Email entrante → MX de Cloudflare → Email Routing
+  → forward a Email Worker
+     → parse MIME (texto, attachments)
+     → Claude clasifica: {agendar, cobrar, queja, spam, urgente}
+     → Workflow ejecuta acción:
+         - agendar: crea cita en Google Calendar, responde confirmación
+         - cobrar: genera link Stripe, envía respuesta con link
+         - queja: abre issue en Linear, notifica al equipo
+         - urgente: escala por WA al fundador
+     → archiva copia en Notion</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> El clasificador debe tener un modo "no sé, escalo" — un LLM clasificador con 95% accuracy aún falla 1 de 20 veces, y ese 5% puede ser el paciente diciendo "tengo dolor en el pecho". La escalación humana es feature, no fallback.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">07</span>
+        <h3>Plataforma AI con MCP como superficie pública</h3>
+      </div>
+      <p class="arch-problem">Quieres que tus clientes (y los agentes que ellos usan — Claude Desktop, Cursor, Copilot) puedan acceder a los datos y acciones de Eigen desde sus propias herramientas, sin construir UI por cada integración.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip solid">MCP Server Worker</span>
+            <span class="chip">Workers OAuth Provider</span>
+            <span class="chip">Access · OAuth gating</span>
+            <span class="chip">API Shield · schema validation</span>
+            <span class="chip">Rate limiting por tenant</span>
+            <span class="chip">AI Gateway · observability</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Cliente abre Claude Desktop → agrega mcp.eigen.dev como tool
+  → OAuth flow: MCP redirige a Access/OAuth Provider
+  → cliente autoriza con credenciales de Eigen
+  → token emitido con scopes del tenant
+Claude invoca tool:
+  → request a MCP Worker con Bearer token
+  → API Shield valida schema
+  → Rate Limiting aplica por tenantId
+  → Worker ejecuta tool (buscar paciente, agendar, reportar)
+  → AI Gateway registra prompt/response para auditoría</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> MCP estandariza la superficie pero expone riesgo nuevo: el agente puede ejecutar acciones destructivas en nombre del usuario. Requiere dual-confirmation para operaciones sensibles (pagos, cambios de horario) y scopes mínimos por defecto.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">08</span>
+        <h3>Observabilidad agent-native</h3>
+      </div>
+      <p class="arch-problem">Los agentes no fallan con stack traces: fallan dando una respuesta subóptima. La observabilidad tradicional (Sentry, logs) no captura "la respuesta fue correcta pero mala", y sin medir eso no hay mejora sistemática.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip">Workers productivos</span>
+            <span class="chip solid">Tail Worker</span>
+            <span class="chip">Analytics Engine · métricas</span>
+            <span class="chip">Logpush → R2 · audit trail</span>
+            <span class="chip">AI Gateway · prompt logging</span>
+            <span class="chip">Sentry · errores humanos</span>
+            <span class="chip">Slack · alertas críticas</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Worker productivo emite eventos estructurados
+  → Tail Worker recibe en vivo
+     ├─→ métricas (latencia, tokens, tool-call success) → Analytics Engine
+     ├─→ prompts/responses completos → AI Gateway + Logpush a R2
+     ├─→ errores con stack → Sentry
+     └─→ alertas (bad rating, tool fail crítico) → Slack
+
+Eval loop offline:
+  R2 → DuckDB → queries sobre historia → casos borderline → eval suite</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> Logpush completo de prompts/responses es expensive y levanta flags de privacidad con datos médicos. Solución: Logpush con PII redaction + retención corta (7 días) + sampleo para eval dataset.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">09</span>
+        <h3>Sistema de pagos confiable con idempotencia</h3>
+      </div>
+      <p class="arch-problem">Los webhooks de Stripe llegan duplicados, fuera de orden, tarde. Procesarlos ingenuamente causa cobros dobles, emails repetidos, estados inconsistentes. Los incidentes de pago son los que menos toleran los clientes.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip">Stripe webhook endpoint</span>
+            <span class="chip solid">Worker verificador</span>
+            <span class="chip">Queue · dedupe por event.id</span>
+            <span class="chip">Consumer Worker</span>
+            <span class="chip">DO por customerId · estado autoritativo</span>
+            <span class="chip">Workflow · dunning</span>
+            <span class="chip">Email Workers · notificaciones</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Stripe → POST webhook → Worker verifica firma HMAC
+  → encola evento con message_id = stripe.event.id (dedupe nativo)
+  → devuelve 200 inmediatamente (Stripe no reintenta)
+
+Consumer Worker procesa con at-least-once:
+  → hydrate DO(customerId)
+  → DO aplica evento idempotentemente:
+       if event.id in DO.processed_events: skip
+       else: update state, push to processed_events
+  → según tipo: trigger Workflow de dunning (pagos fallidos),
+               o Email Worker con recibo (pagos exitosos)
+  → escribe métrica a Analytics Engine</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> DO es single-writer por customerId — correcto para consistency, pero cuidado con "hot customers" (uno que genera 1000 eventos/segundo). Para esos casos, particionar por event_type dentro del DO o usar un DO secundario.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">10</span>
+        <h3>Zero-trust internal tools</h3>
+      </div>
+      <p class="arch-problem">Dashboards de operación, admin panels, herramientas internas de QA — todo corre en subdominios que no deberían estar en el internet público, pero tampoco quieres montar VPN o un BastionHost.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip solid">Cloudflare Access · SSO</span>
+            <span class="chip">Workers (internal tools)</span>
+            <span class="chip">Workers VPC + Mesh</span>
+            <span class="chip">Hyperdrive · DB privada</span>
+            <span class="chip">Gateway · filtro DNS del equipo</span>
+            <span class="chip">Audit logs a R2</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Usuario → admin.eigen.dev
+  → Access intercepta: ¿email autorizado? ¿MFA? ¿device posture?
+     - sí → emite JWT de sesión (15 min TTL)
+     - no → deniega con log en audit trail
+  → request pasa al Worker con headers firmados (Cf-Access-Authenticated-User-Email)
+  → Worker aplica autorización fina (role-based)
+  → via Workers VPC + Mesh accede a DB privada (no público)
+  → responde datos + escribe audit log a R2</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> Access es notablemente más fácil que Auth0 para cuentas chicas, pero el vendor lock-in es real — migrar a otro IdP más adelante implica re-implementar. Para Eigen en etapa temprana es la elección correcta; revisar cuando haya &gt;50 empleados.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">11</span>
+        <h3>Agente de voz en tiempo real</h3>
+      </div>
+      <p class="arch-problem">El paciente o huésped no quiere escribir — quiere hablar. Y el agente necesita responder en menos de 800 ms con la voz del dominio (dra. X, recepción del hotel) para no sentirse robótico.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip solid">Workers Calls · WebRTC SFU</span>
+            <span class="chip">Worker audio pipeline</span>
+            <span class="chip">Whisper (en Containers)</span>
+            <span class="chip">Claude · streaming SSE</span>
+            <span class="chip">ElevenLabs TTS</span>
+            <span class="chip">DO sesión de voz</span>
+            <span class="chip">AI Gateway Guardrails</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">User abre llamada → Workers Calls establece WebRTC
+  → pcm chunks llegan al Worker cada 200 ms
+     → VAD (voice activity detection) en edge
+     → cuando detecta fin de frase:
+         Container con Whisper transcribe → texto
+         → Guardrails filtra PII/injection
+         → Claude API con streaming (SSE) genera respuesta
+         → tokens salen a ElevenLabs TTS streaming
+         → audio chunks vuelven por Workers Calls al user
+  → DO(sessionId) persiste turn history + resumen cada 10 turnos</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> La latencia p95 es implacable: Whisper ~300 ms, Claude TTFB ~400 ms, TTS ~200 ms = ~900 ms antes del primer fonema. Paralelizar TTS con Claude streaming y precomputar saludos ayuda. Para &lt;500 ms real-time, considerar modelos especializados tipo GPT-4o voice o Gemini 2.0 Live.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">12</span>
+        <h3>Streaming LLM con SSE / WebSockets</h3>
+      </div>
+      <p class="arch-problem">Una respuesta del LLM de 400 tokens tarda ~4 s. Hacer al usuario esperar 4 s con spinner mata la percepción de producto; mostrar los tokens a medida que llegan lo transforma.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip solid">Worker endpoint SSE</span>
+            <span class="chip">Claude API · stream: true</span>
+            <span class="chip">ReadableStream + TransformStream</span>
+            <span class="chip">ctx.waitUntil · logging async</span>
+            <span class="chip">AI Gateway · cost tracking</span>
+            <span class="chip">DO · si hay multi-cliente</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Client → GET /chat (Accept: text/event-stream)
+  → Worker crea ReadableStream
+  → inicia llamada Claude con stream: true
+     → cada chunk de Claude → TransformStream
+       → reformatea como SSE "data: {text}\n\n"
+       → escribe al ReadableStream que va al cliente
+  → al finalizar:
+     ctx.waitUntil(persistirHistorial + logging a Analytics Engine)
+  → cliente va pintando tokens en React con EventSource API</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> SSE es simple y funciona tras proxies; WebSockets requieren más setup pero permiten bidireccional (tools callbacks). Para chat unidireccional (user pregunta, bot responde), SSE gana por simplicidad. El <span class="mono-inline">ctx.waitUntil</span> es lo que hace esto correcto — persistir no debe bloquear la respuesta del último token.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">13</span>
+        <h3>Multi-region active-active con failover</h3>
+      </div>
+      <p class="arch-problem">Un cliente enterprise exige SLA 99.99% y tolerancia a caída completa de una región cloud. Workers está globalmente distribuido, pero tu DB no lo está.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip solid">Workers (stateless, globales)</span>
+            <span class="chip">Load Balancing · health checks</span>
+            <span class="chip">D1 read replicas</span>
+            <span class="chip">Postgres primario (us-east) + réplica (eu-west)</span>
+            <span class="chip">Hyperdrive por región</span>
+            <span class="chip">Queues · eventual sync</span>
+            <span class="chip">Monitors + Slack alerts</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Request → Cloudflare Edge (anycast, PoP más cercano)
+  → Worker decide read vs write:
+     - read: intenta D1 replica local; miss → Hyperdrive a réplica Postgres local
+     - write: siempre a primario vía Hyperdrive us-east
+  → LB monitorea health de Postgres primario
+     - si falla: promueve réplica + redirige Hyperdrive (manual o auto)
+     - Queues acumula writes fallidos para replay al recovery
+
+Fallback staged:
+  nivel 1: servir desde D1 replicas (read-only degradado)
+  nivel 2: servir página de mantenimiento (Cloudflare Pages)</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> Active-active real requiere consistencia eventual aceptada por el producto. Para finanzas (pagos, balances) no aplica — mejor single-master con failover rápido. Para lectura-dominante (catálogos, búsquedas), active-active paga. La complejidad operacional se triplica; reservar para cuando el SLA lo justifique económicamente.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">14</span>
+        <h3>Colaboración en tiempo real con CRDTs sobre Durable Objects</h3>
+      </div>
+      <p class="arch-problem">Múltiples usuarios editan el mismo recurso (agenda del hotel, expediente clínico colaborativo, checklist de turno) y las ediciones deben mergearse sin conflictos ni overwrite ciego.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip solid">DO por documento</span>
+            <span class="chip">WebSockets + Hibernation</span>
+            <span class="chip">Yjs / Automerge CRDT</span>
+            <span class="chip">R2 · snapshots periódicos</span>
+            <span class="chip">Access · autorización por documento</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">User abre documento → WebSocket al DO(docId)
+  → DO mantiene estado CRDT (Yjs doc) en memoria
+  → cada edición local → update CRDT → broadcast a todos los WS del DO
+  → DO aplica update a su copia (conmutativo, siempre converge)
+  → periódicamente (cada 30s o 100 ops):
+     DO snapshot → R2 (persistencia durable)
+  → al hibernar: estado se restaura del último snapshot + eventos R2
+
+Concurrencia: Yjs maneja merge automático, no hay conflictos ni OT manual</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> DO single-threaded es el encaje perfecto para CRDT colaborativo — sin locks, sin conflictos. El límite: un DO por documento escala bien hasta ~200 colaboradores simultáneos; más requiere particionar por secciones. Para Eigen, vale si algún cliente (hotel con múltiples recepcionistas) realmente necesita colaboración en vivo; probablemente over-engineering para la mayoría.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">15</span>
+        <h3>Feature flags + experimentación A/B</h3>
+      </div>
+      <p class="arch-problem">Quieres activar features por cliente, por región, por porcentaje de tráfico, y medir el impacto — sin redeploys y sin tocar código de producto.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip">KV · flags globales</span>
+            <span class="chip solid">Worker · evaluator</span>
+            <span class="chip">DO · sticky bucketing por user</span>
+            <span class="chip">Analytics Engine · exposiciones + conversiones</span>
+            <span class="chip">Admin UI con Access</span>
+            <span class="chip">Versioned Deploys (opcional)</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Request llega con userId
+  → Worker carga flags de KV (cached local ~1 ms)
+  → para cada flag:
+     if targeting "por_cliente": check tenant
+     if targeting "por_porcentaje":
+        bucket = hash(userId + flagKey) % 100
+        si bucket < rollout → ON
+     DO(userId).recordExposure(flagKey, variant)
+  → Worker ejecuta con flags resueltos
+  → eventos de conversión llegan → correlación con exposures
+  → dashboard: lift por variant + significance testing</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> Sticky bucketing con <span class="mono-inline">hash(userId + flagKey)</span> es determinístico y no requiere DO — solo el recording sí. Alternativa simple si no necesitas per-user targeting: Versioned Deploys con Gradual Rollout hace A/B a nivel deploy. Para experimentos de producto (UI), los flags son correctos; para cambios infraestructurales, usar rollouts.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">16</span>
+        <h3>Webhook fan-out / event bus interno</h3>
+      </div>
+      <p class="arch-problem">Un evento (pago confirmado, cita agendada, lead nuevo) debe disparar N acciones: email, actualización de CRM, notificación interna, actualización de analytics, trigger de Zapier. Hacerlas sincrónicamente es frágil.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip solid">Worker publisher</span>
+            <span class="chip">Queue por tipo de evento</span>
+            <span class="chip">N Consumer Workers (uno por handler)</span>
+            <span class="chip">Service Bindings internos</span>
+            <span class="chip">Dead-letter Queue</span>
+            <span class="chip">Logpush · audit trail</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Evento origen (pago, webhook, acción manual)
+  → Worker publisher valida + normaliza schema
+  → escribe a Queue("payment.confirmed") con metadata común
+  → Cloudflare entrega a N consumers configurados:
+     - consumer_email → envía recibo al cliente
+     - consumer_crm → actualiza HubSpot via API
+     - consumer_analytics → escribe a Analytics Engine
+     - consumer_internal → notifica a Slack
+  → cada consumer es independiente:
+     falla uno → dead-letter queue, reintento, no afecta otros
+  → Logpush guarda audit completo en R2 para replay</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> Queues en CF son at-least-once con dedupe opcional — los consumers deben ser idempotentes. Fan-out vía Service Bindings (invocación directa) es más rápido pero acopla deploys; vía Queues desacopla y resiliente, pero agrega ~50-200 ms de latencia. Para eventos user-facing no críticos, Queues gana; para flujos user-blocking, Service Bindings.</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">17</span>
+        <h3>API aggregator con rate limiting por cliente</h3>
+      </div>
+      <p class="arch-problem">Expones varias APIs internas bajo una surface unificada (para partners, integradores, otros clientes de Eigen), con planes distintos (free, pro, enterprise) y cada uno con cuotas distintas por endpoint.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip solid">Worker gateway</span>
+            <span class="chip">API Shield · schema validation</span>
+            <span class="chip">Rate Limiting por API key</span>
+            <span class="chip">Workers OAuth Provider · issuing</span>
+            <span class="chip">DO por api_key · cuotas + usage</span>
+            <span class="chip">Service Bindings a APIs internas</span>
+            <span class="chip">Logpush + Analytics Engine</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Request de partner → gateway con Bearer token
+  → Worker valida token (OAuth Provider)
+  → API Shield valida body contra schema OpenAPI
+  → DO(apiKey).consume(endpoint, cost):
+     - revisa plan + cuota mensual
+     - decrementa balance
+     - si excede → 429 con Retry-After
+  → Service Binding a API interna (Billing, Calendar, Patients)
+  → respuesta con headers X-RateLimit-Remaining
+  → Logpush escribe cada call con costo → Analytics Engine</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> Rate Limiting nativo de CF es más simple y barato que un DO por key, pero el DO permite cuotas mensuales acumulativas y facturación por uso — imposible con el rate limiter built-in. Usar ambos: rate limiter para burst protection (por segundo), DO para cuota (por mes).</div>
+    </article>
+
+    <article class="arch">
+      <div class="arch-head">
+        <span class="arch-num">18</span>
+        <h3>Pipeline de content moderation</h3>
+      </div>
+      <p class="arch-problem">Usuarios suben fotos (perfil de paciente, tickets de reservación, evidencia de queja) o texto abierto (reviews, chat público). Cualquiera puede ser PII, abuso, contenido ilegal o daño reputacional si se almacena y se reindexa.</p>
+      <div class="arch-grid">
+        <div>
+          <div class="arch-label">Componentes</div>
+          <div class="chips">
+            <span class="chip solid">Worker ingress</span>
+            <span class="chip">Cloudflare Images · intake</span>
+            <span class="chip">Workers AI · Llama Guard · CLIP</span>
+            <span class="chip">Claude · second-pass review</span>
+            <span class="chip">R2 · quarantine + published buckets</span>
+            <span class="chip">Queue · async pipeline</span>
+            <span class="chip">Workflow · human review</span>
+          </div>
+        </div>
+        <div>
+          <div class="arch-label">Flujo</div>
+          <pre class="arch-flow">Upload llega al Worker → tipo-detect
+  Texto:
+    → Workers AI Llama Guard clasifica toxicidad/PII
+    → si borderline → Claude segunda pasada con contexto
+    → score > umbral → quarantine R2; score limpio → R2 público
+  Imagen:
+    → Cloudflare Images recibe (thumbnail auto)
+    → Workers AI CLIP clasifica (NSFW, violencia, PII visible)
+    → si detecta cara: opcional face-blur automático
+    → quarantine vs publish igual que texto
+  Queue → Workflow de revisión humana si borderline
+    → reviewer humano aprueba/rechaza → decisión persistida
+  Todo el pipeline genera audit log inmutable en R2</pre>
+        </div>
+      </div>
+      <div class="arch-note"><strong>Trade-offs.</strong> Llama Guard es barato y suficiente para el 90% del volumen; Claude como second-pass agrega costo pero salva el 10% borderline. Face-blur automático para fotos de pacientes puede ser buena decisión default por cumplimiento LFPDPPP — mejor pedir perdón que permiso legal. Archivos rechazados van a bucket encriptado con retención de 30 días por posible disputa.</div>
+    </article>
+
+  </section>
+
+  <section class="terms">
+    <div>
+      <div class="kicker">Parte IV</div>
+      <h2>Los <em>términos</em><br>del programa.</h2>
+    </div>
+    <dl class="terms-grid">
+      <div class="term-row">
+        <dt>Compensación</dt>
+        <dd>$4,000 MXN mensuales por estudiante, más bono de cierre de $10,000 MXN para quien entregue con excelencia.<small>Pagado vía transferencia o CFDI de asimilados según preferencia del estudiante. No sustituye créditos académicos; suma a ellos.</small></dd>
+      </div>
+      <div class="term-row">
+        <dt>Mentoría</dt>
+        <dd>Una hora semanal 1:1 con el fundador, más feedback asíncrono ilimitado en Slack y revisión de PRs.<small>Los retos 03 y 05 incluyen shadow a llamadas de cliente desde la primera semana.</small></dd>
+      </div>
+      <div class="term-row">
+        <dt>Evaluación</dt>
+        <dd>Rúbrica pactada con el asesor académico del Tec al inicio del semestre. Evaluación a mitad y al cierre.<small>El socio formador se compromete a documentar el avance por bloque (aprox. 5 semanas).</small></dd>
+      </div>
+      <div class="term-row">
+        <dt>Oferta post-graduación</dt>
+        <dd>El estudiante top de cada cohorte recibe oferta formal de contratación al graduarse del Tec.<small>No es promesa al aire: Eigen contrata ingenieros seniors a sueldos competitivos y prefiere recrecer desde el programa.</small></dd>
+      </div>
+      <div class="term-row">
+        <dt>Campus</dt>
+        <dd>Cualquier campus del sistema Tec. Preferencia Guadalajara por cercanía al fundador, pero no excluyente.<small>Remoto por default. Un kickoff presencial opcional en GDL al inicio.</small></dd>
+      </div>
+      <div class="term-row">
+        <dt>Confidencialidad</dt>
+        <dd>NDA estándar al inicio del semestre. Código y datos de clientes bajo acceso controlado.<small>El trabajo productivo puede ser parte del portafolio al final del semestre, bajo lineamientos pactados.</small></dd>
+      </div>
+    </dl>
+  </section>
+
+  <footer class="colophon">
+    <span>Eigen · Raúl Zhou · <em>soluciones de ingeniería para negocios de servicios</em></span>
+    <span>Documento v1 · 2026</span>
+  </footer>
+
+</main>
+</body>
+</html>

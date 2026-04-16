@@ -1,0 +1,101 @@
+# CLAUDE.md · [nombre del proyecto]
+
+**Este archivo carga contexto para agentes de IA que trabajan en este repo.**
+Si eres humano, lee `README.md` y `EIGEN_MANIFESTO.md` en la raíz del monorepo.
+
+---
+
+## Qué hace este repo
+
+Una línea. Ej: "Worker que maneja WhatsApp + Google Calendar + Stripe para la clínica de Dr. Marcos."
+
+## Contexto global
+
+Este repo sigue el **Eigen Manifiesto Técnico v1.0** (`../EIGEN_MANIFESTO.md`).
+Lee ese documento antes de hacer cambios no triviales. Define:
+- Stack por default (Cloudflare Workers + D1/DO/R2 + Claude API + Supabase + Stripe).
+- Reglas de construcción (spec-first, TDD, review humano obligatorio para decisiones no reversibles).
+- Prompt engineering standards (prompts versionados + cacheados + evaluados).
+- Delivery (PR chicos, rollouts graduales, observabilidad al día 1).
+
+No repitas aquí lo que ya está allá. Solo **desviaciones** de este repo específico.
+
+---
+
+## Stack local (desviaciones del default, si hay)
+
+- [solo si algo difiere del manifesto]
+
+## Skills a cargar en esta sesión
+
+```
+["cloudflare-workers-patterns", "eigen-testing", "eigen-observability"]
+```
+
+## Comandos críticos
+
+```bash
+bun install                    # setup
+bun run dev                    # local con cf dev + Miniflare
+bun test                       # unit + integration
+bun run deploy:staging         # deploy a staging
+bun run deploy:production      # deploy a production (requiere tag)
+cf tail                        # logs en vivo
+```
+
+## Convenciones específicas de este repo
+
+- [solo convenciones que NO estén en el manifesto]
+
+## Qué NO tocar sin preguntar
+
+- `/src/billing/**` — dos approvers requeridos, afecta cobros reales.
+- `/src/prompts/**` — cambios requieren evals actualizadas.
+- `/migrations/**` — migraciones destructivas requieren firma del fundador.
+
+## Secrets y environments
+
+Nunca commitees `.env`. Usar `cf secret put`. Variables por environment en `wrangler.toml`.
+
+Secrets esperados:
+- `ANTHROPIC_API_KEY`
+- `STRIPE_SECRET_KEY`
+- `GOOGLE_OAUTH_CLIENT_SECRET`
+- [otros específicos del proyecto]
+
+## Observabilidad local
+
+- Correlation ID: header `X-Request-Id`, propagado en todos los subrequests.
+- Logs: structured JSON a stdout. Sentry captura errores.
+- Métricas: Analytics Engine dataset `{proyecto}_metrics` con `customerId` + `feature`.
+
+## Runbooks
+
+Los 3 runbooks más probables de este servicio:
+1. `/docs/runbooks/high-latency.md`
+2. `/docs/runbooks/stripe-webhook-backlog.md`
+3. `/docs/runbooks/agent-cost-anomaly.md`
+
+---
+
+## Para agentes de IA · protocolo
+
+Antes de modificar código no trivial:
+
+1. **Entiende el intent.** Si no está claro, pregunta antes de escribir.
+2. **Escribe el plan primero.** Un `.md` corto describiendo qué, dónde, cómo, tests, rollback. Revisado por humano antes de ejecutar.
+3. **TDD cuando aplique.** Tests antes o junto al código, no después.
+4. **PRs chicos.** < 300 líneas. Si algo crece, partir.
+5. **Verifica antes de declarar completo.** Corre tests + type-check + smoke manual. "Evidence before assertions."
+
+Silent failure watchlist:
+- Tests que pasan sin validar invariante real.
+- Try/catch que traga errores.
+- Abstracciones preventivas sin justificación.
+- Scope creep (cambios fuera del plan).
+
+Si detectas uno de estos en código existente, repórtalo — no lo extiendas.
+
+---
+
+*Versión de este CLAUDE.md: inherited from Manifiesto v1.0 · 15 abril 2026*

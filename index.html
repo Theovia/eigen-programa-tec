@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eigen · Programa de Socio Formador · Semestre Tec 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F5F2EA;
+    --paper-deep: #EDE8DB;
+    --ink: #14110D;
+    --ink-soft: #3A352C;
+    --ink-mute: #736B5C;
+    --rule: #C8BFAC;
+    --accent: #6B1F1F;
+    --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --sans: "Inter Tight", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--paper); color: var(--ink); }
+  body {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(107,31,31,0.04), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(163,77,42,0.04), transparent 40%);
+    min-height: 100vh;
+  }
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 56px 28px 80px;
+  }
+  .brand {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 38px;
+    letter-spacing: -0.02em;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 6px;
+    font-variation-settings: "opsz" 96;
+  }
+  .brand em { font-style: italic; font-weight: 400; color: var(--accent); }
+  .subline {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 48px;
+    padding-bottom: 2px;
+    border-bottom: 3px solid var(--ink);
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(40px, 7vw, 60px);
+    line-height: 1.03;
+    letter-spacing: -0.025em;
+    margin-bottom: 28px;
+    font-variation-settings: "opsz" 144;
+  }
+  h1 em { font-style: italic; color: var(--accent); font-weight: 300; }
+  .lede {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    font-weight: 300;
+    margin-bottom: 48px;
+    font-variation-settings: "opsz" 30;
+  }
+  .lede p + p { margin-top: 12px; }
+
+  .doc-list { list-style: none; padding: 0; }
+  .doc-list a {
+    display: block;
+    padding: 24px 0;
+    border-top: 1px solid var(--rule);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+  }
+  .doc-list a:last-child { border-bottom: 1px solid var(--rule); }
+  .doc-list a:hover { background: var(--paper-deep); }
+  .doc-list a:active { background: var(--paper-deep); }
+  .doc-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .doc-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    min-width: 32px;
+  }
+  .doc-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    flex: 1;
+    font-variation-settings: "opsz" 60;
+  }
+  .doc-title em { font-style: italic; color: var(--accent); }
+  .doc-arrow {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--ink-mute);
+    font-weight: 300;
+  }
+  .doc-list a:hover .doc-arrow { color: var(--accent); }
+  .doc-meta {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    color: var(--ink-mute);
+    margin-left: 44px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .doc-desc {
+    font-family: var(--serif);
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    margin-left: 44px;
+    font-variation-settings: "opsz" 20;
+  }
+
+  .footer {
+    margin-top: 72px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .footer em {
+    font-family: var(--serif);
+    font-style: italic;
+    text-transform: none;
+    font-size: 13px;
+    letter-spacing: 0;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 40px 20px 56px; }
+    .doc-title { font-size: 18px; }
+    .doc-meta, .doc-desc { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <div class="brand">Eigen<em>.</em></div>
+  <div class="subline">Programa de Socio Formador · Semestre Tec · 2026</div>
+
+  <h1>El programa,<br><em>en siete documentos</em>.</h1>
+
+  <div class="lede">
+    <p>Este sitio es el índice del programa educativo que Eigen está proponiendo al Tec de Monterrey como Socio Formador: retos productivos para estudiantes del Semestre Tec, con Cloudflare como plataforma, IA como compañero de trabajo, y el negocio real de Eigen como laboratorio.</p>
+    <p>Siete documentos que cruzan desde la propuesta estratégica hasta el manual de campo práctico. Léelos en orden sugerido o salta al que te interese.</p>
+  </div>
+
+  <ul class="doc-list">
+    <li><a href="./eigen-retos-tec.html">
+      <div class="doc-head">
+        <span class="doc-num">01</span>
+        <span class="doc-title">Dossier · <em>cinco retos y su contexto</em></span>
+        <span class="doc-arrow">→</span>
+      </div>
+      <div class="doc-meta">HTML · Dossier ejecutivo</div>
+      <div class="doc-desc">El documento que presenta el programa: cinco retos diseñados (2 técnicos, 2 ops, 1 Chief of Staff), catálogo de 114 actividades sobre Cloudflare, 18 arquitecturas de referencia, y los términos del programa (stipend, mentoría, evaluación).</div>
+    </a></li>
+
+    <li><a href="./eigen-curriculum-cloudflare.html">
+      <div class="doc-head">
+        <span class="doc-num">02</span>
+        <span class="doc-title">Plan de estudios · <em>Cloudflare Mastery</em></span>
+        <span class="doc-arrow">→</span>
+      </div>
+      <div class="doc-meta">HTML · 15 módulos · 122h · 8 talleres</div>
+      <div class="doc-desc">El syllabus completo del programa. 15 módulos secuenciales (fundamentos edge, persistencia, concurrencia, agentes, visión, seguridad, etc.), 8 talleres optativos, mapeo a Learning Paths oficiales de Cloudflare, ruta de certificación ACE/ASA. Cada objetivo y lectura expandible al click.</div>
+    </a></li>
+
+    <li><a href="./eigen-clase-cloudflare.html">
+      <div class="doc-head">
+        <span class="doc-num">03</span>
+        <span class="doc-title">Clase magistral · <em>Cloudflare bajo lente de IA</em></span>
+        <span class="doc-arrow">→</span>
+      </div>
+      <div class="doc-meta">HTML · 15 secciones · ~3h de lectura</div>
+      <div class="doc-desc">El material enseñable de la plataforma. Por qué Cloudflare ahora, filosofía edge, Workers, estado, orquestación, capa de IA, agentes, red, seguridad, datos, multi-tenant, observabilidad, Agents Week 2026, arquitecturas de referencia, y desarrollo asistido por IA como lente transversal.</div>
+    </a></li>
+
+    <li><a href="./eigen-recetario.html">
+      <div class="doc-head">
+        <span class="doc-num">04</span>
+        <span class="doc-title">Recetario · <em>manual de campo</em></span>
+        <span class="doc-arrow">→</span>
+      </div>
+      <div class="doc-meta">HTML · 30 prompts · 10 starters · 20 failure modes</div>
+      <div class="doc-desc">La capa práctica. 30 prompts productivos copy-paste para los momentos recurrentes del oficio, 10 sistemas de arranque completos (agente WhatsApp, dashboard mensual, intake de correo, SaaS multi-tenant, webhook idempotente, OCR pipeline, RAG, monitor operacional, lead capture, Waiting Room), práctica diaria estructurada, y 20 failure modes con síntoma/diagnóstico/fix.</div>
+    </a></li>
+
+    <li><a href="./EIGEN_MANIFESTO.md">
+      <div class="doc-head">
+        <span class="doc-num">05</span>
+        <span class="doc-title">Manifiesto técnico · <em>doctrina de Eigen</em></span>
+        <span class="doc-arrow">→</span>
+      </div>
+      <div class="doc-meta">Markdown · Doctrina interna</div>
+      <div class="doc-desc">El documento vivo de doctrina técnica. Stack por default, principios no-negociables, excepciones al stack con dueño, cómo trabajamos con IA, prompt engineering en producción, context engineering para repos, delivery, operación, gente. Se lee en el día 1 y se actualiza trimestralmente.</div>
+    </a></li>
+
+    <li><a href="./CLAUDE.md.template">
+      <div class="doc-head">
+        <span class="doc-num">06</span>
+        <span class="doc-title">CLAUDE.md template · <em>agent-facing</em></span>
+        <span class="doc-arrow">→</span>
+      </div>
+      <div class="doc-meta">Markdown · Template por repo</div>
+      <div class="doc-desc">Plantilla del archivo que cada repo de Eigen incluye en su raíz. Carga el manifesto por referencia, lista desviaciones locales, skills a cargar, comandos críticos, runbooks relevantes, y protocolo para agentes de IA. El contexto mínimo que Claude Code lee al abrir sesión.</div>
+    </a></li>
+  </ul>
+
+  <div class="footer">
+    <span>Eigen · <em>soluciones de ingeniería para negocios de servicios</em></span>
+    <span>v1 · abril 2026</span>
+  </div>
+
+</main>
+</body>
+</html>

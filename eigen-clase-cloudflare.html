@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eigen · Clase magistral · Cloudflare bajo el lente de IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F5F2EA;
+    --paper-deep: #EDE8DB;
+    --ink: #14110D;
+    --ink-soft: #3A352C;
+    --ink-mute: #736B5C;
+    --rule: #C8BFAC;
+    --rule-soft: #D9D1BE;
+    --accent: #6B1F1F;
+    --accent-warm: #A34D2A;
+    --serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --sans: "Inter Tight", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--paper); color: var(--ink); }
+  body {
+    font-family: var(--sans);
+    font-size: 15.5px;
+    line-height: 1.62;
+    font-feature-settings: "ss01","cv11";
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(107,31,31,0.03), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(163,77,42,0.03), transparent 40%);
+    min-height: 100vh;
+  }
+  .page { max-width: 960px; margin: 0 auto; padding: 64px 56px 96px; }
+
+  .masthead {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 10px;
+  }
+  .brand { font-family: var(--serif); font-weight: 500; font-size: 34px; letter-spacing: -0.02em; font-variation-settings: "opsz" 80, "SOFT" 30; }
+  .brand em { font-style: italic; font-weight: 400; color: var(--accent); }
+  .masthead-meta { text-align: right; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-mute); line-height: 1.8; }
+  .masthead-meta a { color: var(--accent); text-decoration: none; }
+  .sub-rule { height: 3px; background: var(--ink); margin-bottom: 4px; }
+  .sub-rule + .sub-rule { height: 1px; margin-bottom: 40px; }
+
+  .hero {
+    padding: 16px 0 48px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 56px;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(42px, 5.5vw, 72px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    font-variation-settings: "opsz" 144, "SOFT" 20;
+    margin-bottom: 28px;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); font-weight: 300; }
+  .hero-lede {
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    font-weight: 300;
+    max-width: 760px;
+    font-variation-settings: "opsz" 30;
+  }
+  .hero-lede p + p { margin-top: 14px; }
+
+  /* TOC */
+  .toc {
+    margin-bottom: 72px;
+    padding: 32px 32px 36px;
+    background: var(--paper-deep);
+    border-left: 3px solid var(--ink);
+  }
+  .toc-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+  .toc ol { list-style: none; padding: 0; columns: 2; column-gap: 40px; }
+  .toc li {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 4px 0;
+    break-inside: avoid;
+  }
+  .toc li a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: flex;
+    gap: 14px;
+  }
+  .toc li a:hover { color: var(--accent); }
+  .toc li .toc-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    min-width: 32px;
+  }
+
+  /* Section */
+  section.lesson {
+    margin-bottom: 72px;
+    padding-top: 24px;
+    scroll-margin-top: 24px;
+  }
+  section.lesson h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 44px;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    color: var(--ink);
+    margin-bottom: 8px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--ink);
+    font-variation-settings: "opsz" 96;
+  }
+  section.lesson h2 em { font-style: italic; color: var(--accent); }
+  section.lesson .sec-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: block;
+  }
+  section.lesson .tagline {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    font-weight: 300;
+    margin: 20px 0 28px;
+    max-width: 720px;
+    font-variation-settings: "opsz" 30;
+  }
+  section.lesson p {
+    font-family: var(--sans);
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+  section.lesson p.lede {
+    font-family: var(--serif);
+    font-size: 17.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    margin-bottom: 22px;
+    font-variation-settings: "opsz" 20;
+  }
+  section.lesson h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+    margin: 36px 0 12px;
+    color: var(--ink);
+    font-variation-settings: "opsz" 60;
+  }
+  section.lesson h3 em { font-style: italic; color: var(--accent); }
+  section.lesson h4 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 18px;
+    margin: 24px 0 10px;
+    color: var(--ink);
+    font-variation-settings: "opsz" 40;
+  }
+  section.lesson ul, section.lesson ol {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+  }
+  section.lesson ul li, section.lesson ol li {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 8px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  section.lesson ul li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent);
+    font-family: var(--serif);
+  }
+  section.lesson ol { counter-reset: sec-list; }
+  section.lesson ol li { counter-increment: sec-list; }
+  section.lesson ol li::before {
+    content: counter(sec-list, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--ink-mute);
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+  section.lesson li strong {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-style: italic;
+    color: var(--ink);
+    font-size: 16px;
+    font-variation-settings: "opsz" 20;
+  }
+
+  .mono-inline {
+    font-family: var(--mono);
+    font-size: 0.9em;
+    background: var(--paper-deep);
+    padding: 1px 6px 2px;
+    border: 1px solid var(--rule);
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+
+  pre.code {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--paper-deep);
+    border-left: 2px solid var(--accent);
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin: 22px 0;
+    white-space: pre;
+  }
+  pre.code .comment { color: var(--ink-mute); font-style: italic; }
+  pre.code .keyword { color: var(--accent); font-weight: 500; }
+
+  .callout {
+    background: rgba(107, 31, 31, 0.05);
+    border-left: 3px solid var(--accent);
+    padding: 18px 22px;
+    margin: 24px 0;
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--ink);
+    font-variation-settings: "opsz" 20;
+  }
+  .callout strong {
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .ai-lens {
+    background: var(--paper-deep);
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: 22px 24px;
+    margin: 30px 0;
+  }
+  .ai-lens .lens-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ai-lens .lens-label::before {
+    content: "◈";
+    color: var(--accent);
+    font-size: 14px;
+  }
+  .ai-lens p {
+    font-family: var(--serif);
+    font-size: 16.5px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin-bottom: 12px;
+    font-variation-settings: "opsz" 30;
+  }
+  .ai-lens p:last-child { margin-bottom: 0; }
+
+  .diagram {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--ink);
+    background: var(--paper-deep);
+    padding: 20px 22px;
+    margin: 24px 0;
+    overflow-x: auto;
+    white-space: pre;
+    border: 1px solid var(--rule);
+  }
+
+  table.cmp {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 22px 0;
+    font-family: var(--sans);
+    font-size: 14px;
+  }
+  table.cmp th, table.cmp td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  table.cmp th {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    border-bottom: 1px solid var(--ink);
+    background: var(--paper-deep);
+  }
+  table.cmp td strong {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--ink);
+    font-size: 15px;
+    font-variation-settings: "opsz" 20;
+  }
+
+  .colophon {
+    margin-top: 96px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .colophon em {
+    font-family: var(--serif);
+    font-style: italic;
+    text-transform: none;
+    font-size: 13px;
+    letter-spacing: 0;
+    color: var(--ink-soft);
+  }
+  .colophon a { color: var(--ink-mute); text-decoration: none; }
+
+  @media (max-width: 880px) {
+    .page { padding: 40px 24px 64px; }
+    .toc ol { columns: 1; }
+    .hero h1 { font-size: 40px; }
+    section.lesson h2 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="masthead">
+    <div class="brand">Eigen<em>.</em></div>
+    <div class="masthead-meta">
+      Clase magistral · v1 · 15 abril 2026<br>
+      <a href="./eigen-retos-tec.html">↩ dossier</a> · <a href="./eigen-curriculum-cloudflare.html">plan de estudios</a>
+    </div>
+  </header>
+  <div class="sub-rule"></div>
+  <div class="sub-rule"></div>
+
+  <section class="hero">
+    <h1>Cloudflare en 2026,<br>bajo el <em>lente de IA</em>.</h1>
+    <div class="hero-lede">
+      <p>Este documento existe porque hace cinco años nadie necesitaba aprender Cloudflare a profundidad — era CDN, se configuraba y se olvidaba. Hoy, Cloudflare es la plataforma donde se construyen los productos AI-nativos del trimestre. Saber usarla bien es una habilidad diferenciadora.</p>
+      <p>La clase se mueve en dos dimensiones: <em>qué hace cada servicio</em> y <em>cómo cambia la manera de construir cuando sabes que Claude Code es tu compañero de trabajo</em>. Las dos dimensiones se entrelazan desde la primera página — no hay una sección "aparte" sobre IA. Lo AI-nativo está por todas partes.</p>
+    </div>
+  </section>
+
+  <nav class="toc">
+    <div class="toc-label">Contenido · 15 secciones · lectura guiada ~3 h</div>
+    <ol>
+      <li><a href="#s00"><span class="toc-num">§00</span>Por qué Cloudflare ahora</a></li>
+      <li><a href="#s01"><span class="toc-num">§01</span>La filosofía: edge, Anycast, isolates</a></li>
+      <li><a href="#s02"><span class="toc-num">§02</span>Workers: el compute primitivo</a></li>
+      <li><a href="#s03"><span class="toc-num">§03</span>Estado: KV, D1, R2, Durable Objects</a></li>
+      <li><a href="#s04"><span class="toc-num">§04</span>Orquestación: Queues, Workflows, Bindings</a></li>
+      <li><a href="#s05"><span class="toc-num">§05</span>La capa de IA: modelos, Vectorize, AI Gateway</a></li>
+      <li><a href="#s06"><span class="toc-num">§06</span>Agentes: Agents SDK, Think, MCP, skills</a></li>
+      <li><a href="#s07"><span class="toc-num">§07</span>Red, delivery y media</a></li>
+      <li><a href="#s08"><span class="toc-num">§08</span>Seguridad y Zero Trust</a></li>
+      <li><a href="#s09"><span class="toc-num">§09</span>Datos y analítica edge-nativa</a></li>
+      <li><a href="#s10"><span class="toc-num">§10</span>Multi-tenant y plataforma SaaS</a></li>
+      <li><a href="#s11"><span class="toc-num">§11</span>Observabilidad y operación</a></li>
+      <li><a href="#s12"><span class="toc-num">§12</span>Agents Week · 15 abril 2026</a></li>
+      <li><a href="#s13"><span class="toc-num">§13</span>Diez arquitecturas de referencia</a></li>
+      <li><a href="#s14"><span class="toc-num">§14</span>Construir con Claude Code sobre Cloudflare</a></li>
+    </ol>
+  </nav>
+
+  <!-- §00 -->
+  <section class="lesson" id="s00">
+    <span class="sec-num">§00</span>
+    <h2>Por qué <em>Cloudflare ahora</em></h2>
+    <p class="tagline">Hace cinco años era infraestructura de fondo. Hoy es la plataforma donde se construyen productos.</p>
+
+    <p class="lede">Cloudflare empezó como red de distribución de contenido — velocidad de carga, protección DDoS, DNS. Durante una década fue eso: una capa que aceleraba lo que ya existía. En 2018 lanzó Workers, y la plataforma empezó a cambiar. En 2024, con Workers AI y Vectorize, cambió de forma. En 2026, con Durable Object Facets, Agents SDK, Browser Run y Agent Lee, <em>cambió de naturaleza</em>.</p>
+
+    <p>Hoy Cloudflare no es infraestructura en el sentido clásico. Es una plataforma de aplicación en la que los servicios primitivos — compute, estado, red, modelos de IA — se componen con una coherencia que AWS, GCP y Azure nunca tuvieron porque crecieron por adquisición, no por diseño. Un Worker llama a un Durable Object llama a Workers AI llama a Vectorize, todo en la misma red, con el mismo lenguaje de bindings, con latencia intra-PoP medida en microsegundos.</p>
+
+    <p>Para nosotros — constructores de productos B2B en 2026 — esto importa por tres razones:</p>
+
+    <ul>
+      <li><strong>Velocidad de ejecución.</strong> Lo que hace cinco años requería EC2 + RDS + ElastiCache + Lambda + SQS + SNS + IAM + CloudWatch, hoy es Workers + D1 + KV + Queues + Analytics Engine — con una sola configuración, una sola facturación, un solo mental model.</li>
+      <li><strong>Costos predecibles.</strong> No hay sorpresas de egress. No hay sorpresas de NAT gateway. Los pricing tables son legibles por humanos. En Eigen, donde vendemos margen sobre costo, esto es oro.</li>
+      <li><strong>Diseño AI-nativo.</strong> Cloudflare es la primera plataforma cuya superficie está diseñada para que agentes de IA operen sobre ella. El MCP oficial de Cloudflare da a Claude Code y a Cursor acceso inmediato a todo el API. Agent Lee es literalmente un agente de IA que vive en el dashboard. Esto no existe todavía en AWS.</li>
+    </ul>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>La consecuencia práctica es que tú no aprendes Cloudflare solo. Lo aprendes <em>con</em> Claude Code. Cada vez que estás atorado, le preguntas. Cada vez que quieres probar algo, lo deployas con <span class="mono-inline">cf deploy</span> desde una conversación. El manual de la plataforma está indexado en el MCP — Claude lo consulta en tiempo real. Si sabes articular tu intención con precisión, construyes a velocidad de pensamiento.</p>
+      <p>Pero eso no reemplaza entender los fundamentos. El objetivo de esta clase no es que puedas pedirle a Claude "hazme un Worker" — es que puedas leer el código que Claude produjo, detectar el silent failure que introdujo, y articular por qué la arquitectura propuesta no va a escalar. Entender sin necesidad de IA es lo que te permite usar la IA con criterio.</p>
+    </div>
+  </section>
+
+  <!-- §01 -->
+  <section class="lesson" id="s01">
+    <span class="sec-num">§01</span>
+    <h2>La filosofía: <em>edge, Anycast, isolates</em></h2>
+    <p class="tagline">Para construir bien sobre Cloudflare, primero entiende en qué se diferencia de todo lo demás.</p>
+
+    <p class="lede">Cloudflare opera una red de ~330 data centers (llamados <em>PoPs</em> — points of presence) en ~120 países. Cuando un usuario hace una solicitud HTTP a un dominio servido por Cloudflare, la solicitud llega al PoP más cercano físicamente al usuario — no al servidor de origen. Esto no es "cloud computing" en el sentido de AWS us-east-1. Es <em>edge computing</em>: el cómputo vive en el perímetro de la red, cerca del usuario.</p>
+
+    <h3>Anycast</h3>
+
+    <p>La dirección IP de tu Worker en Cloudflare no es una dirección específica de un servidor. Es una dirección <em>anycast</em>: muchos servidores en muchos países anuncian la misma IP al internet, y el protocolo BGP enruta cada request al servidor más cercano al emisor. Es por esto que <span class="mono-inline">cloudflare.com</span> responde en 15ms desde Ciudad de México y también en 15ms desde Berlín — son dos PoPs distintos respondiendo al mismo dominio.</p>
+
+    <h3>V8 isolates: el corazón de Workers</h3>
+
+    <p>Aquí está la idea que hace que Workers exista: los contenedores son demasiado pesados para edge computing. Un contenedor Docker tarda segundos en arrancar, consume megabytes de memoria en overhead, y requiere un kernel Linux completo. Si cada request abriera un contenedor nuevo, el edge sería más lento que el origen.</p>
+
+    <p>Cloudflare toma prestado de los browsers una primitiva distinta: el <em>V8 isolate</em>. V8 es el motor de JavaScript que corre en Chrome. Un isolate es una instancia aislada del runtime dentro del mismo proceso — no es un contenedor, no es una VM, es una región de memoria con su propio heap y sus propios globales. Arranca en menos de 5 milisegundos, consume cientos de kilobytes, y miles de isolates coexisten en el mismo proceso con aislamiento fuerte entre ellos.</p>
+
+    <div class="callout">
+      <strong>La consecuencia crítica</strong>
+      Cold starts no existen en Workers. Tu código se compila la primera vez que se despliega, y a partir de ahí, cada request a cualquier PoP puede ejecutarlo sin arrancar nada. Esto cambia cómo diseñas: puedes tener Workers "caros" de ejecutar sin temor a penalizar al primer usuario.
+    </div>
+
+    <h3>La consecuencia de diseño: sin procesos</h3>
+
+    <p>Como Workers corre en isolates y no en procesos, no puedes tener un servidor HTTP escuchando entre requests. No hay "background jobs" en el Worker mismo. No puedes escribir a disco porque no hay disco. Esto suena como limitación pero es liberador: te empuja a usar las primitivas correctas — Durable Objects para estado persistente por entidad, Queues para trabajo async, Workflows para pipelines de larga duración, Cron Triggers para tareas programadas.</p>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>Cuando Claude Code genera un Worker, a veces importa paquetes de Node que asumen un runtime completo — <span class="mono-inline">fs</span>, <span class="mono-inline">child_process</span>, <span class="mono-inline">http.createServer</span>. Si no entiendes esta diferencia, aceptas el código y fallas en deploy. Si la entiendes, identificas el error conceptual y corriges el rumbo: "Claude, reescribe esto usando <span class="mono-inline">fetch</span> y <span class="mono-inline">R2</span>, no Node primitives."</p>
+    </div>
+  </section>
+
+  <!-- §02 -->
+  <section class="lesson" id="s02">
+    <span class="sec-num">§02</span>
+    <h2>Workers: <em>el compute primitivo</em></h2>
+    <p class="tagline">La unidad fundamental sobre la que todo lo demás se compone.</p>
+
+    <p class="lede">Un Worker es una función TypeScript (o JavaScript, WebAssembly, Python vía Pyodide) con un handler principal — típicamente <span class="mono-inline">fetch</span> — que Cloudflare ejecuta en respuesta a un request HTTP. La forma más simple posible:</p>
+
+    <pre class="code">export default {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise&lt;Response&gt; {
+    return new Response("Hola desde el edge.");
+  }
+};</pre>
+
+    <h3>Los tres parámetros</h3>
+
+    <p>El handler recibe tres argumentos. Entender cada uno es entender Workers:</p>
+
+    <ul>
+      <li><strong><span class="mono-inline">request</span></strong> — la solicitud HTTP entrante, idéntica al API <span class="mono-inline">Request</span> del estándar web. Contiene <span class="mono-inline">request.cf</span> con metadata de Cloudflare (colo, país, bot score, TLS version, etc.).</li>
+      <li><strong><span class="mono-inline">env</span></strong> — el <em>environment</em>. Contiene tus bindings declarados en <span class="mono-inline">wrangler.toml</span>: acceso a KV, D1, R2, DO, Queues, secrets. <em>Esto es cómo los Workers hablan con el resto de Cloudflare.</em> Un binding no es una URL, es una referencia tipada que Cloudflare inyecta en runtime.</li>
+      <li><strong><span class="mono-inline">ctx</span></strong> — el <em>execution context</em>. Ofrece dos primitivas críticas: <span class="mono-inline">ctx.waitUntil(promise)</span> para trabajo async que debe terminar después de responder (logging, analytics, cache warming); y <span class="mono-inline">ctx.passThroughOnException()</span> para que si el Worker falla, el request pase directo al origen como fallback.</li>
+    </ul>
+
+    <h3>Handlers más allá de fetch</h3>
+
+    <p>Workers soporta varios tipos de handler, cada uno con su propio contexto:</p>
+
+    <ul>
+      <li><strong><span class="mono-inline">fetch</span></strong> — request HTTP (el común).</li>
+      <li><strong><span class="mono-inline">scheduled</span></strong> — Cron Trigger. Se ejecuta en horario configurado.</li>
+      <li><strong><span class="mono-inline">queue</span></strong> — consumer de una Queue. Recibe batch de mensajes.</li>
+      <li><strong><span class="mono-inline">email</span></strong> — Email Worker. Recibe correo entrante como MIME parseado.</li>
+      <li><strong><span class="mono-inline">tail</span></strong> — Tail Worker. Recibe eventos de ejecución de otros Workers (logs, traces, errores).</li>
+      <li><strong><span class="mono-inline">alarm</span></strong> — dentro de un Durable Object, despierta cuando la alarma programada dispara.</li>
+    </ul>
+
+    <h3>Bindings: el modelo de composición</h3>
+
+    <p>En lugar de hacer <span class="mono-inline">fetch("https://kv.example.com/...")</span> con credenciales, el Worker hace <span class="mono-inline">env.MY_KV.get("key")</span>. El binding es una referencia que Cloudflare resuelve en runtime, y está tipada — TypeScript sabe que <span class="mono-inline">env.MY_KV</span> es un <span class="mono-inline">KVNamespace</span>. Esto tiene dos consecuencias:</p>
+
+    <ol>
+      <li><strong>Zero network overhead.</strong> Entre Workers del mismo account y recursos bindeados, no hay HTTP real; es una llamada en memoria al binding layer.</li>
+      <li><strong>Tipado de punta a punta.</strong> Si cambias el schema de un D1, tu <span class="mono-inline">env.MY_DB</span> refleja el cambio después de regenerar tipos. Catches de error en compile time, no en runtime.</li>
+    </ol>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>Cuando generas un Worker con Claude Code, una de las primeras cosas que hace es preguntar (o asumir) qué bindings necesita. Un prompt bien engineerado menciona explícitamente: "este Worker necesita binding a D1 llamado <span class="mono-inline">DB</span>, KV llamado <span class="mono-inline">CACHE</span>, y Queue llamada <span class="mono-inline">JOBS</span>". Claude genera el <span class="mono-inline">wrangler.toml</span> correcto y los tipos consistentes. Si no eres explícito, Claude infiere, y ahí aparecen inconsistencias sutiles entre el código y la configuración.</p>
+    </div>
+  </section>
+
+  <!-- §03 -->
+  <section class="lesson" id="s03">
+    <span class="sec-num">§03</span>
+    <h2>Estado: <em>KV, D1, R2, Durable Objects</em></h2>
+    <p class="tagline">Cloudflare tiene cinco maneras distintas de guardar datos. Elegir la correcta es oficio.</p>
+
+    <p class="lede">Un Worker es stateless — cada request es una invocación independiente. Para guardar estado hay cinco primitivas, cada una con semántica específica. La habilidad distintiva de un Solutions Architect no es conocerlas — es saber cuál elegir para cada caso, con números en mano.</p>
+
+    <h3>Workers KV · eventual consistency global</h3>
+
+    <p>KV es un diccionario clave-valor globalmente distribuido. Escribes una clave en cualquier PoP, y la escritura se propaga a todos los PoPs del mundo en 60 segundos o menos. Lecturas son locales — leen del PoP más cercano al usuario, con latencia típica &lt;10ms.</p>
+
+    <p>Su ventaja: lecturas rápidas globales. Su costo: writes son eventualmente consistentes. Si escribes <span class="mono-inline">KV.put("balance:u123", "100")</span> y un microsegundo después lees <span class="mono-inline">KV.get("balance:u123")</span> desde otro PoP, puede que todavía veas el valor viejo.</p>
+
+    <p><strong>Cuándo usar:</strong> configuración, feature flags, sesiones (con TTL corto), cache de respuestas HTTP pesadas. <strong>Cuándo no usar:</strong> contadores, balances, cualquier cosa donde la consistencia importa.</p>
+
+    <h3>D1 · SQLite en el edge</h3>
+
+    <p>D1 es una base de datos relacional SQLite que Cloudflare replica en el edge. Soporta SQL completo — joins, window functions, CTEs, transacciones. Desde 2026 tiene <em>read replicas</em> en múltiples regiones y una <em>Sessions API</em> para lecturas consistentes dentro de una transacción lógica.</p>
+
+    <p>D1 es para datos estructurados que caben en una base relacional: tablas de usuarios, reservas, catálogos de producto. Su límite: no es Postgres. Si tu app necesita volumen transaccional serio, joins complejos a escala, o extensiones tipo PostGIS, usas Postgres externo vía Hyperdrive (que veremos).</p>
+
+    <h3>R2 · blob storage sin egress</h3>
+
+    <p>R2 es el S3 de Cloudflare. Compatible con la API S3, sin fees de egress (descargar datos no cuesta). Soporta URLs firmadas, event notifications (dispara Workers cuando un objeto cambia), y desde 2026 tiene <em>R2 Data Catalog</em> — una capa de Apache Iceberg para queries analíticas directamente sobre R2 con DuckDB, ClickHouse o Spark.</p>
+
+    <p>Úsalo para archivos — imágenes, videos, PDFs, checkpoints de modelos, logs archivados, snapshots de backup. No lo uses para datos estructurados pequeños que cambien frecuentemente (eso es D1 o KV).</p>
+
+    <h3>Durable Objects · estado consistente por entidad</h3>
+
+    <p>DO es la primitiva más distintiva de Cloudflare y también la más difícil de entender al principio. Un DO es un <em>actor</em>: un objeto identificado por un ID (típicamente un <span class="mono-inline">userId</span>, <span class="mono-inline">conversationId</span>, <span class="mono-inline">hotelId</span>) que tiene estado en memoria + estado persistente, y que garantiza que <em>solo una instancia del DO existe globalmente para un ID dado</em>. Cloudflare migra la instancia al PoP donde más se usa.</p>
+
+    <p>Esto es mágico para casos donde necesitas strong consistency por entidad: contadores por usuario, sesión de chat por conversación, estado de reserva por huésped. No hay race conditions entre requests al mismo DO — son serializados automáticamente. No necesitas locks, no necesitas optimistic concurrency, no necesitas nada. El actor lo resuelve.</p>
+
+    <p>Además, DO tiene <em>hibernation</em>: si no hay actividad por un tiempo, Cloudflare lo hiberna. Cuando llega un request, se despierta con su estado intacto. No pagas por DOs idle.</p>
+
+    <p>Desde abril 2026, DO tiene <em>Facets</em>: cada instancia puede tener su propia base SQLite aislada. Esto habilita multi-tenant por defecto — un DO por cliente, cada uno con sus propios datos, sin pre-provisionamiento.</p>
+
+    <h3>Cache API · HTTP cache programable</h3>
+
+    <p>La Cache API (<span class="mono-inline">caches.default</span>) es el cache HTTP por PoP de Cloudflare, accesible desde Workers. Es cache efímero, regional (no global como KV), y barato. Úsalo para responses HTTP caras que cambian poco y que pueden regenerarse sin problema.</p>
+
+    <h3>Matriz de decisión</h3>
+
+    <table class="cmp">
+      <thead>
+        <tr><th>Primitiva</th><th>Consistencia</th><th>Alcance</th><th>Latencia típica</th><th>Úsala para</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>KV</strong></td><td>Eventual</td><td>Global</td><td>&lt;10 ms lectura</td><td>Config, flags, sesiones TTL corto</td></tr>
+        <tr><td><strong>D1</strong></td><td>Strong local, eventual replicas</td><td>Regional</td><td>10–50 ms</td><td>Datos relacionales, migraciones</td></tr>
+        <tr><td><strong>R2</strong></td><td>Strong per object</td><td>Global</td><td>50–200 ms</td><td>Blobs, archivos, backups</td></tr>
+        <tr><td><strong>DO</strong></td><td>Strong por entidad</td><td>Migra al PoP activo</td><td>Varía</td><td>Estado por entidad, chat, reservas</td></tr>
+        <tr><td><strong>Cache API</strong></td><td>Regional efímera</td><td>Por PoP</td><td>&lt;5 ms</td><td>HTTP responses caras</td></tr>
+      </tbody>
+    </table>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>Claude Code tiende a elegir DO por defecto porque "DO es flexible". Es sobrediagnóstico: si solo necesitas guardar config, un DO es overkill — KV resuelve con menos complejidad. Por otro lado, si Claude te sugiere guardar el balance de una cuenta en KV, detecta el error: eventual consistency + dinero = incidente. Tu trabajo es ejercer el criterio que el modelo no tiene sobre las consecuencias operacionales.</p>
+    </div>
+  </section>
+
+  <!-- §04 -->
+  <section class="lesson" id="s04">
+    <span class="sec-num">§04</span>
+    <h2>Orquestación: <em>Queues, Workflows, Service Bindings</em></h2>
+    <p class="tagline">Cómo se coordinan las piezas cuando el trabajo no cabe en un solo request.</p>
+
+    <p class="lede">Un request HTTP en Workers tiene un budget limitado — típicamente hasta 30 segundos de CPU. Para trabajo que excede ese presupuesto, o que debe sobrevivir reinicios, Cloudflare ofrece tres primitivas de orquestación cuya combinación resuelve la mayoría de sistemas productivos.</p>
+
+    <h3>Queues · async confiable</h3>
+
+    <p>Queues es la primitiva de mensajería. Un productor escribe mensajes, un consumer los procesa. Garantías: <em>at-least-once delivery</em> (un mensaje puede entregarse más de una vez — tu consumer debe ser idempotente), batching configurable (el consumer recibe hasta N mensajes por invocación), retries con backoff automático, dead-letter queue para mensajes que fallan repetidamente.</p>
+
+    <p>Modelo mental correcto: Queues es el reemplazo de Kafka/SQS para la mayoría de casos. No tiene ordering global (los mensajes pueden llegar fuera de orden entre batches), pero tiene ordering por consumer batch y dedupe opcional.</p>
+
+    <pre class="code"><span class="comment">// Productor: en un Worker fetch handler</span>
+await env.JOBS.send({ type: "send_email", userId: "u123" });
+
+<span class="comment">// Consumer: en un Worker queue handler</span>
+export default {
+  async queue(batch: MessageBatch, env: Env) {
+    for (const msg of batch.messages) {
+      try {
+        await processJob(msg.body);
+        msg.ack();
+      } catch (err) {
+        msg.retry({ delaySeconds: 60 });
+      }
+    }
+  }
+};</pre>
+
+    <h3>Workflows · ejecución durable</h3>
+
+    <p>Workflows es la evolución de "cron + scripts". Defines una serie de <em>steps</em>; Cloudflare los ejecuta con persistencia automática del estado entre ellos. Si un step falla, reintenta con backoff. Si el Worker muere, Cloudflare retoma el workflow donde quedó. Cada step tiene su propio timeout. Puedes programar sleeps de días, semanas, meses.</p>
+
+    <p>Desde 2026 tiene features clave: <em>signals externos</em> (un workflow puede esperar a que otro sistema lo despierte — perfecto para human-in-the-loop), y <em>compensación</em> estilo saga (si el paso 5 falla, ejecuta la compensación de los pasos 1-4 para deshacer).</p>
+
+    <div class="callout">
+      <strong>El patrón que lo transforma todo</strong>
+      El flujo clásico de "cron job en EC2 que corre cada hora y procesa una cola" se vuelve: Workflow iniciado una vez, con step "fetch trabajo", step "procesar", step "notificar", step "sleep 1 hora", loop. No hay infraestructura que monitorear. No hay "¿por qué el cron no corrió?". Si Cloudflare está arriba, tu workflow sigue ejecutándose.
+    </div>
+
+    <h3>Service Bindings · invocación sin red</h3>
+
+    <p>Un Worker puede llamar a otro Worker sin ir por HTTP, usando un binding directo. La llamada no cruza la red — es una invocación en memoria entre isolates, con latencia de microsegundos, tipada, sin costo adicional.</p>
+
+    <p>Esto habilita un patrón arquitectónico poderoso: microservicios <em>lógicos</em> (código modular, responsabilidades separadas, repos independientes) sin el costo de microservicios <em>físicos</em> (HTTP interno, service mesh, latencia). Tu Worker "billing" es un módulo; tu Worker "agenda" es otro módulo; ambos se componen en un tercero via bindings.</p>
+
+    <h3>Cron Triggers y DO Alarms</h3>
+
+    <p>Cron Triggers ejecutan un Worker en horarios configurados (sintaxis cron estándar). Hasta 1,000 crons por account, sin infraestructura. Para scheduling por-entidad (un timer por usuario, por cita, por pedido), usas <em>DO Alarms</em> — un DO programa una alarma, Cloudflare dispara el handler cuando es tiempo.</p>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>Cuando pides a Claude un pipeline de procesamiento, su primer instinto es escribir una función síncrona gigante. Detenlo: "Usa Workflows con steps atómicos, y marca los pasos críticos como idempotentes." El código resultante es infinitamente más robusto — pero solo si tú sabes pedirlo. Este es el patrón recurrente de trabajar con Claude bien: la IA escribe rápido, pero tú le das la estructura correcta.</p>
+    </div>
+  </section>
+
+  <!-- §05 -->
+  <section class="lesson" id="s05">
+    <span class="sec-num">§05</span>
+    <h2>La capa de IA: <em>modelos, Vectorize, AI Gateway</em></h2>
+    <p class="tagline">Cloudflare no entrena modelos. Los sirve, los memoriza, los enruta y los factura con inteligencia.</p>
+
+    <p class="lede">Cloudflare tiene tres servicios principales para construir productos de IA: <strong>Workers AI</strong> (inferencia hosted de modelos open-source), <strong>Vectorize</strong> (base de datos vectorial para memoria semántica), y <strong>AI Gateway</strong> (plano de observabilidad y control para llamadas a cualquier modelo). Estos tres componen la capa AI-nativa junto con Claude API (externa) y el Agents SDK (la veremos en §06).</p>
+
+    <h3>Workers AI · inferencia en el edge</h3>
+
+    <p>Cloudflare hospeda un catálogo creciente de modelos open-source: Llama, Mistral, Gemma, CLIP, Whisper, Stable Diffusion, embeddings. Los invocas desde un Worker con un binding:</p>
+
+    <pre class="code">const response = await env.AI.run(
+  "@cf/meta/llama-3.1-8b-instruct",
+  {
+    messages: [{ role: "user", content: "Resume este texto: ..." }]
+  }
+);</pre>
+
+    <p>La inferencia corre en GPUs distribuidas en los PoPs. Latencia típica: 200–800 ms para modelos pequeños. Desde 2026 soporta structured outputs (JSON schema), tool calling nativo, y contextos más largos. GPT-5.4 fue agregado al catálogo en abril.</p>
+
+    <p>Workers AI es perfecto para: clasificación, moderación, embeddings, transcripción, generación de imágenes simples. No es perfecto para: razonamiento pesado de frontera (ahí gana Claude), fine-tuning custom (ahí va a Modal), latencia sub-100ms (ahí ganan modelos edge específicos).</p>
+
+    <h3>Vectorize · memoria semántica</h3>
+
+    <p>Vectorize es una base de datos vectorial. Guardas embeddings (vectores numéricos que representan semánticamente un documento o frame de imagen) junto con metadata, y consultas por similitud. Soporta filtros por metadata, namespaces para multi-tenancy, y escala a millones de vectores sin operación propia.</p>
+
+    <pre class="code"><span class="comment">// Insertar embedding</span>
+await env.INDEX.insert([{
+  id: "doc-42",
+  values: embedding,       <span class="comment">// array de 1536 floats</span>
+  metadata: { tenantId, category: "menu" }
+}]);
+
+<span class="comment">// Consultar por similitud</span>
+const results = await env.INDEX.query(queryEmbedding, {
+  topK: 10,
+  filter: { tenantId }
+});</pre>
+
+    <p>Caso típico en Eigen: memoria de un agente conversacional — cada mensaje relevante se embebe y se guarda; cuando el paciente regresa, el agente recupera los 5 más relevantes al tema actual y los inyecta en el prompt.</p>
+
+    <h3>AI Gateway · observabilidad y control de LLMs</h3>
+
+    <p>AI Gateway es un proxy configurable delante de cualquier API de LLM: Anthropic, OpenAI, Google, Workers AI. Haces tus llamadas vía el gateway en lugar de directamente al proveedor. A cambio obtienes:</p>
+
+    <ul>
+      <li><strong>Caching automático</strong> de responses idénticas o similares (baja costo 30–70%).</li>
+      <li><strong>Rate limiting</strong> y circuit breakers por modelo o por cliente.</li>
+      <li><strong>Logging estructurado</strong> de prompts y respuestas (con redacción de PII opcional).</li>
+      <li><strong>Costo atribuible</strong> por feature, usuario, o tenant.</li>
+      <li><strong>Guardrails</strong> inline: detección de PII, prompt injection, jailbreak, toxicidad.</li>
+      <li><strong>Fallback automático</strong>: si Anthropic responde 503, retry contra OpenAI.</li>
+    </ul>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>Sin AI Gateway, tu costo de producción se escapa y tu observabilidad es ciega. Con AI Gateway, el dashboard te dice: "este feature cuesta $0.02 por llamada, el 70% es prompt cache hit, el guardrail bloqueó 3 intentos de injection la semana pasada." Esto transforma la decisión de "¿cómo está funcionando mi agente?" de una pregunta filosófica a una pregunta con datos.</p>
+      <p>Patrón recomendado en Eigen: todas las llamadas a Claude o Workers AI pasan por AI Gateway, con logging opt-in para evals offline. El eval suite lee del log, no hace llamadas nuevas. Eso baja el costo de iterar evals 10× o más.</p>
+    </div>
+  </section>
+
+  <!-- §06 -->
+  <section class="lesson" id="s06">
+    <span class="sec-num">§06</span>
+    <h2>Agentes: <em>Agents SDK, Think, MCP</em></h2>
+    <p class="tagline">La diferencia entre un "bot con tool use" y un agente productivo vive en la arquitectura. Aquí está.</p>
+
+    <p class="lede">Un agente no es un LLM con un bucle de tool use. Es un sistema que persiste estado, ejecuta pasos, maneja fallos, aprueba acciones sensibles con humanos, y se observa a sí mismo. Cloudflare ofrece la plataforma más completa para construir esto en 2026.</p>
+
+    <h3>Cloudflare Agents SDK · next edition (Think)</h3>
+
+    <p>El SDK de Agents de Cloudflare, en su edición renovada lanzada el 15 de abril de 2026, redefine qué es un agente: cada agente es una <em>clase TypeScript que corre sobre un Durable Object</em>. El DO provee SQL propia, WebSockets, scheduler interno, memoria persistente. El framework <em>Think</em> se encarga de la persistencia — si el Worker muere, el agente retoma donde quedó.</p>
+
+    <pre class="code">export class MedicalIntakeAgent extends Agent&lt;Env, State&gt; {
+  async onMessage(msg: string) {
+    const context = await this.memory.retrieveRelevant(msg);
+    const response = await this.llm.chat({
+      system: this.systemPrompt,
+      messages: [...context, { role: "user", content: msg }],
+      tools: [this.scheduleTool, this.billingTool]
+    });
+    await this.memory.store(msg, response);
+    return response;
+  }
+}</pre>
+
+    <p>Features incluidos out-of-the-box: streaming chat, tools server-side y client-side, human-in-the-loop approval, task scheduling, memoria persistente. No reinventas nada de esto — lo compones.</p>
+
+    <h3>Claude Agent SDK · la otra pieza</h3>
+
+    <p>Del lado de Anthropic, el Claude Agent SDK define primitivas adicionales que combinas con el de Cloudflare: <em>skills</em> (unidades modulares con triggering por patrones y progressive disclosure), <em>subagents</em> (delegación a agentes especializados tipo coordinator/worker), <em>hooks</em> (interceptores pre/post tool use, Stop, SessionStart), y un modelo de memoria estructurada.</p>
+
+    <p>En la práctica, un agente Eigen combina ambos: la infraestructura (runtime, persistencia, scheduling) del Cloudflare SDK, y la disciplina (skills, subagents, hooks, memory) del Claude SDK.</p>
+
+    <h3>MCP · Model Context Protocol</h3>
+
+    <p>MCP es un estándar (iniciado por Anthropic, adoptado por Cloudflare, OpenAI, Microsoft) que define cómo un agente descubre y llama herramientas externas. Un servidor MCP expone tools; cualquier cliente MCP (Claude Desktop, Cursor, Copilot, Claude Code) puede conectarse y usarlas.</p>
+
+    <p>Cloudflare ofrece dos superficies:</p>
+
+    <ul>
+      <li><strong>Cloudflare MCP</strong> — servidor oficial que expone el API completo de Cloudflare (~3,000 operaciones) a cualquier cliente MCP. Tu Claude Code literalmente puede crear Workers, configurar DNS, provisionar D1 databases, desde un chat.</li>
+      <li><strong>MCP servers hosteados sobre Workers</strong> — construyes tu propio MCP server para que tus tools de negocio sean accesibles a agentes externos. Con OAuth + rate limiting + schema validation. Tus clientes usan sus propios Claude Desktop o Cursor para interactuar con los servicios de Eigen.</li>
+    </ul>
+
+    <h3>Patrones multi-agente</h3>
+
+    <p>Un agente monolítico con 20 tools es un anti-pattern. Los patrones correctos en 2026:</p>
+
+    <ul>
+      <li><strong>Coordinator / worker</strong> — un agente orquestador rutea requests a subagentes especializados (Scheduler, Billing, Medical Intake). Cada subagente tiene solo los tools que necesita.</li>
+      <li><strong>Debate</strong> — dos agentes con system prompts opuestos discuten un caso; un tercero decide. Útil para decisiones reversibles donde el costo de error es alto.</li>
+      <li><strong>Ensemble</strong> — misma pregunta a tres modelos distintos, respuestas agregadas por votación o síntesis. Mejora accuracy al costo de latencia y dinero.</li>
+      <li><strong>Critic</strong> — después de que el agente responde, un crítico lo revisa antes de que salga al usuario. Detecta fallas obvias (alucinaciones, tono inapropiado, PII expuesta) con latencia adicional pequeña.</li>
+    </ul>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>Cuando Claude Code construye un agente por ti, lo que sugiere por default suele ser monolítico. Detente y pide: "Separa esto en subagents: uno para agenda, uno para pagos, uno para triage clínico. Cada uno con su propio system prompt corto. El coordinator los despacha según intent." El código resultante es significativamente más mantenible y testeable — y la accuracy sube porque cada subagent tiene contexto más enfocado.</p>
+    </div>
+  </section>
+
+  <!-- §07 -->
+  <section class="lesson" id="s07">
+    <span class="sec-num">§07</span>
+    <h2>Red, delivery <em>y media</em></h2>
+    <p class="tagline">El linaje original de Cloudflare. Sigue siendo la mitad del valor.</p>
+
+    <p class="lede">La historia de Cloudflare empieza con CDN. Después de 15 años, esa capa es la más madura, la más barata, y la más olvidada — hasta que la necesitas. Entender caching, delivery y media optimization te ahorra costos enormes y construye productos que se sienten rápidos.</p>
+
+    <h3>CDN y Cache API</h3>
+
+    <p>Cuando un request llega a un PoP, Cloudflare verifica si tiene el response en cache. Si sí, lo devuelve en milisegundos sin ir al origen. La cache key por default incluye URL + método + ciertos headers; puedes customizarla. TTL configurable, purge manual o por tag, Vary por headers para contenido personalizado.</p>
+
+    <p>La <em>Cache API</em> te da control programático desde Workers: puedes leer del cache, escribir al cache, evaluar condiciones, aplicar transformaciones. Esto habilita patrones tipo "stale-while-revalidate": devuelves contenido viejo rápido mientras refrescas en background con <span class="mono-inline">ctx.waitUntil</span>.</p>
+
+    <h3>Cache Reserve y Tiered Cache</h3>
+
+    <p>Para contenido estático pesado (videos grandes, assets de gigabyte), <em>Cache Reserve</em> guarda el cache en R2 de forma permanente — aumenta hit ratio al 99%+ y reduce carga al origen a prácticamente cero. <em>Tiered Cache</em> crea jerarquía: PoP local → regional → origin. El regional ayuda cuando muchos PoPs cercanos pedirían lo mismo — consolida al regional antes de pegar el origen.</p>
+
+    <h3>Cloudflare Images · optimización de imágenes</h3>
+
+    <p>Images es storage + transformación on-the-fly. Subes una imagen original, pides variantes por URL (<span class="mono-inline">/image/abc/w=800,format=auto</span>). Cloudflare devuelve WebP o AVIF o JPEG según el browser del usuario, con tamaño exacto pedido. URL signing para imágenes privadas.</p>
+
+    <p>En Eigen, cada landing de cliente y cada producto de hotel usa Images por default — no montamos Cloudinary, no corremos imgproxy, no pagamos por CDN separado.</p>
+
+    <h3>Cloudflare Stream · video</h3>
+
+    <p>Stream hace lo mismo para video: subes original, Cloudflare transcodifica automáticamente a HLS y DASH con adaptive bitrate, player embebido con DRM opcional, live streaming con latencia sub-segundo, recording. Analytics por viewer y segmento.</p>
+
+    <h3>Workers Calls · WebRTC SFU</h3>
+
+    <p>Workers Calls provee un <em>Selective Forwarding Unit</em> (SFU) para WebRTC a escala global — la primitiva para construir video/voz en tiempo real. Sin montar LiveKit, sin Jitsi propio, sin Twilio Video.</p>
+
+    <h3>Browser Run (ex Browser Rendering)</h3>
+
+    <p>Browser Run, renombrado y expandido el 15 de abril de 2026, da a tus Workers acceso a Chrome headless en el edge. Pero ya no es solo "headless Chrome como librería": tiene <em>Live View</em> (ver al agente operar en vivo), <em>Human-in-the-Loop</em> (cuando el agente topa con login o captcha, pasa control a humano que resuelve y devuelve), <em>Session Recordings</em> con rrweb-player, y acceso directo al <em>Chrome DevTools Protocol</em>.</p>
+
+    <p>Esto cambia qué es posible en automatización web. Tu agente puede navegar un portal bancario, ceder al humano cuando pide 2FA, y retomar. Sin infraestructura propia.</p>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>Browser Run + HITL es el patrón que hace viable a agentes ejecutar acciones reales en portales que no tienen APIs. Antes requerías Puppeteer en un EC2, un sistema de handover manual, y rezar. Ahora es configuración declarativa. El cambio es significativo y la mayoría aún no lo ha internalizado — es una ventaja competitiva para quien sepa usarlo.</p>
+    </div>
+  </section>
+
+  <!-- §08 -->
+  <section class="lesson" id="s08">
+    <span class="sec-num">§08</span>
+    <h2>Seguridad y <em>Zero Trust</em></h2>
+    <p class="tagline">Cloudflare es, entre otras cosas, la empresa de seguridad más grande del mundo. No ignores esta capa.</p>
+
+    <p class="lede">El stack de seguridad de Cloudflare cubre desde protección DDoS a nivel de paquete hasta control de acceso aplicativo. Para Eigen, las capas más relevantes son WAF, Bot Management, Access, Tunnel, y las nuevas primitivas de agent security (Mesh, Workers VPC, Outbound Workers).</p>
+
+    <h3>WAF · Web Application Firewall</h3>
+
+    <p>WAF inspecciona cada request contra reglas managed (OWASP Top 10 cubierto por default) y reglas custom escritas en <em>Wirefilter</em> (un lenguaje tipo BPF para expresar condiciones sobre requests). Modos: log, simulate, block. Esto captura SQL injection, XSS, path traversal y ataques similares antes de que lleguen a tu Worker.</p>
+
+    <h3>Bot Management</h3>
+
+    <p>Cloudflare analiza cada request con ML entrenado sobre el tráfico agregado de toda su red. Cada request recibe un <em>bot score</em> (1–99). Tú decides qué hacer: bloquear bots hostiles, dejar pasar bots legítimos (Google, GPTBot), retar a los ambiguos con JavaScript challenges.</p>
+
+    <h3>Cloudflare Access · SSO y zero-trust</h3>
+
+    <p>Access es la alternativa de Cloudflare a Auth0/Okta para proteger aplicaciones internas. Configuras: "admin.eigen.dev solo acepta emails @eigen.dev con MFA obligatoria." Cloudflare intercepta cada request, valida el JWT de sesión, y solo deja pasar los autorizados. Auditoría completa, políticas por path, sesión con TTL configurable.</p>
+
+    <p>Para Eigen con pocos empleados, Access es notablemente más simple que montar Auth0 — setup de 20 minutos, $0 en el free tier, escalable.</p>
+
+    <h3>Cloudflare Tunnel · expone servicios on-prem</h3>
+
+    <p>Tunnel (el binario <span class="mono-inline">cloudflared</span>) establece una conexión saliente encriptada desde tu infraestructura on-prem o en otra cloud, hacia la red de Cloudflare. Tus servicios internos quedan accesibles a través del edge sin abrir puertos inbound. Complementado con Access, obtienes zero-trust a cualquier servicio TCP/UDP sin VPN.</p>
+
+    <h3>Workers VPC + Mesh (abril 2026)</h3>
+
+    <p>Para agentes que necesitan acceso privado a bases de datos o APIs internas, Workers VPC + Mesh provee la superficie zero-trust correcta. Sin tunneles manuales, sin VPNs frágiles. Cloudflare maneja routing, authentication, y audit.</p>
+
+    <h3>Outbound Workers para Sandboxes (abril 2026)</h3>
+
+    <p>Cuando ejecutas código generado por IA en un Sandbox, no quieres darle tus credenciales. <em>Outbound Workers</em> es un egress proxy que corre en el runtime Workers — fuera del sandbox. El sandbox hace una request plana; el Outbound Worker inyecta credenciales transparentemente antes de reenviar upstream. El sandbox nunca ve los tokens.</p>
+
+    <p>Además: TLS interception con CA efímera por instancia (la clave privada nunca sale del sidecar), allow/deny lists con glob patterns, políticas dinámicas actualizables sin restart.</p>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>Los Outbound Workers resuelven un problema real de la era de agentes: tu agente ejecuta código que tú no escribiste directamente (lo generó Claude, o lo escribió un subagent autónomo). Ese código no debería tener acceso a tus API keys de Stripe. Antes, esto requería sandboxing complejo con cargo cognitivo alto. Ahora es un outbound handler de 20 líneas. Construir agentes seguros ya no es privilegio de empresas con equipos de infosec — es una decisión configuracional.</p>
+    </div>
+  </section>
+
+  <!-- §09 -->
+  <section class="lesson" id="s09">
+    <span class="sec-num">§09</span>
+    <h2>Datos y <em>analítica edge-nativa</em></h2>
+    <p class="tagline">El stack analítico que reemplaza Kafka + Snowflake + Airflow + Datadog con primitivas más simples.</p>
+
+    <p class="lede">La historia del data stack de los últimos 10 años es acumulación: Kafka para streaming, Snowflake o BigQuery para warehouse, Airflow para orquestación, Datadog o Grafana para métricas. Cloudflare propone uno más simple — no necesariamente más potente, pero suficiente para el 90% de casos B2B en 2026.</p>
+
+    <h3>Cloudflare Pipelines · ingesta</h3>
+
+    <p>Pipelines (lanzado en 2026) ingesta eventos vía HTTP, los bufferea, los transforma, y los persiste a R2 o a R2 Data Catalog. Reemplaza Kafka + Firehose con una superficie declarativa. Sin ZooKeeper, sin cluster, sin operación.</p>
+
+    <h3>R2 Data Catalog · Iceberg sobre R2</h3>
+
+    <p>R2 Data Catalog es una capa de tablas Apache Iceberg sobre R2. Metadata catalog administrado por Cloudflare. Consultable desde Snowflake, DuckDB, ClickHouse o Spark vía JDBC/HTTP sin mover datos.</p>
+
+    <p>Caso típico en Eigen: eventos de producción (clicks, reservas, transacciones, mensajes de agente) fluyen por Pipelines a Data Catalog. El equipo de análisis consulta con DuckDB desde un notebook. Los reportes mensuales al cliente se generan con SQL estándar.</p>
+
+    <h3>Analytics Engine · time-series</h3>
+
+    <p>Analytics Engine es una base time-series integrada para métricas de producto. Escribes data points desde Workers con <span class="mono-inline">env.ANALYTICS.writeDataPoint(...)</span>, incluyendo dimensiones (customerId, feature, modelo), y consultas con SQL. Escala a millones de points por segundo sin operación.</p>
+
+    <p>Este es el reemplazo de Datadog/Grafana para métricas custom de Eigen — latencia por tool-call de agente, conversiones por vertical, uso por cliente. Barato, integrado, consultable.</p>
+
+    <h3>Logpush · exportación a sistemas externos</h3>
+
+    <p>Para logs que quieres tener en Datadog, Splunk, S3, GCS, Elasticsearch — Logpush los envía en streaming con formato JSON estructurado. Cada fuente (Workers Trace Events, Firewall, AI Gateway, Zero Trust) puede rutearse a destinos distintos.</p>
+
+    <h3>RUM · Real User Monitoring</h3>
+
+    <p>RUM captura Core Web Vitals (LCP, FID, CLS, INP) del tráfico real sin instrumentar JS. Complementado con DEX (Digital Experience Monitoring) para monitoreo sintético desde ubicaciones globales. Este es el stack de performance monitoring para tus landings y frontends.</p>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>El patrón que Claude Code recomienda por default suele ser "guarda logs en Sentry y métricas en PostHog". Funciona, pero te ata a pricing por usuario activo que escala mal. En Eigen, la doctrina correcta es: errores humanos → Sentry, logs estructurados → Workers Logs + Logpush a R2 (barato, controlable), métricas de producto → Analytics Engine, UX tracking → PostHog. Multiplica por los costos de cada uno y la decisión es obvia. El oficio de Solutions Architect es precisamente este tipo de criterio informado.</p>
+    </div>
+  </section>
+
+  <!-- §10 -->
+  <section class="lesson" id="s10">
+    <span class="sec-num">§10</span>
+    <h2>Multi-tenant <em>y plataforma SaaS</em></h2>
+    <p class="tagline">La diferencia entre un producto y una plataforma son tres primitivas.</p>
+
+    <p class="lede">El modelo de negocio de Eigen es vertical × multi-tenant — cada cliente (clínica, hotel, farmacia) tiene su propio setup sobre infraestructura compartida. Construir esto correctamente requiere entender tres primitivas de Cloudflare que pocos usan: Workers for Platforms, DO Facets, y Cloudflare for SaaS.</p>
+
+    <h3>Workers for Platforms · código por cliente</h3>
+
+    <p>Para casos donde cada cliente necesita lógica distinta — descuentos particulares, reglas de aprobación únicas, formatos de mensaje customizados — no queremos forks por cliente. Workers for Platforms permite hospedar un Worker aislado por tenant dentro de un <em>dispatch namespace</em> común. Un Worker dispatcher resuelve el tenant (por hostname, header, o path) e invoca el Worker correspondiente.</p>
+
+    <p>Cada Worker de cliente tiene sus propios límites (CPU, memoria, subrequests), su propio deploy independiente, y aislamiento fuerte contra los demás. Tu plataforma escala a miles de tenants sin tocar el código de ninguno.</p>
+
+    <h3>DO Facets · SQLite por tenant</h3>
+
+    <p>DO Facets, la primitiva nueva de abril 2026, permite instanciar Durable Objects con bases SQLite aisladas por entidad dinámica. Cada tenant tiene su propio DO Facet con su propia base — sin pre-provisionamiento, sin schema común forzado. Complementa Workers for Platforms: el código custom escribe a una base custom.</p>
+
+    <h3>Cloudflare for SaaS · custom hostnames</h3>
+
+    <p>CF for SaaS maneja el problema clásico de SaaS multi-tenant: cada cliente quiere su propio dominio (<span class="mono-inline">acme.com</span> apunta a tu plataforma, no a <span class="mono-inline">tu-saas.com/acme</span>). CF emite certificados TLS automáticamente, los rota, y soporta hasta 500,000 custom hostnames por account.</p>
+
+    <h3>Patrón de plataforma completa</h3>
+
+    <pre class="code">Request → hostname custom (acme.com)
+  → Dispatcher Worker (global)
+     → resuelve tenantId por hostname
+     → invoca Worker aislado del tenant (Workers for Platforms)
+        → usa DO Facet con SQLite exclusiva del tenant
+        → escribe métricas homogéneas a Analytics Engine central
+  → response tipada</pre>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>Workers for Platforms es caro a baja escala. Si tienes 3-5 tenants con lógica similar, un solo Worker con <span class="mono-inline">tenantId</span> en los queries es más simple. El salto a Workers for Platforms se justifica a partir de ~20 tenants con divergencia real de lógica. Esta es una decisión arquitectónica — no pidas a Claude que "haga multi-tenant" sin contexto; define el número de tenants y el grado de divergencia esperada.</p>
+    </div>
+  </section>
+
+  <!-- §11 -->
+  <section class="lesson" id="s11">
+    <span class="sec-num">§11</span>
+    <h2>Observabilidad <em>y operación</em></h2>
+    <p class="tagline">Un sistema que no puedes observar no puedes mantener. Punto.</p>
+
+    <p class="lede">Observabilidad no es logging. Es la capacidad de responder tres preguntas, con evidencia, sobre cualquier incidente: ¿está funcionando bien? ¿cuándo se rompió? ¿por qué? Cloudflare ofrece las primitivas; tu disciplina las convierte en sistema.</p>
+
+    <h3>Workers Logs y Tail Workers</h3>
+
+    <p>Workers Logs es logging nativo con retención 3–7 días, búsqueda por correlation ID, filtros. Tail Workers es la primitiva más potente: un Worker que recibe <em>en vivo</em> los eventos de ejecución de otros Workers — logs, traces, errores. Te permite construir pipelines de observabilidad custom sin dependencias externas.</p>
+
+    <pre class="code">export default {
+  async tail(events: TraceEvent[], env: Env) {
+    for (const evt of events) {
+      if (evt.outcome === "exception") {
+        await sendToSentry(evt);
+      }
+      if (evt.logs.some(l =&gt; l.level === "error")) {
+        await notifySlack(evt);
+      }
+      await env.ANALYTICS.writeDataPoint({
+        indexes: [evt.scriptName],
+        blobs: [evt.event.request?.url ?? ""],
+        doubles: [evt.wallTime, evt.cpuTime]
+      });
+    }
+  }
+};</pre>
+
+    <h3>Versioned Deploys y Gradual Rollouts</h3>
+
+    <p>Cada deploy tiene ID inmutable. Puedes hacer rollouts progresivos (10% → 25% → 100%), rollback instantáneo, A/B entre versiones con ruteo determinístico. Esto transforma deploys de "evento ansioso" a "operación rutinaria". La pregunta "¿podemos desplegar al mediodía?" desaparece.</p>
+
+    <h3>Runbooks y postmortems</h3>
+
+    <p>La doctrina Eigen: cada servicio productivo tiene un runbook con los 3 escenarios de falla más comunes y cómo responderlos. Cada incidente P0 o P1 termina en un postmortem blameless publicado en <span class="mono-inline">/docs/postmortems/</span>. Esto no es tooling — es cultura. Pero las herramientas lo habilitan.</p>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>Claude Code es excelente escribiendo runbooks a partir de código y postmortems. "Lee este servicio, identifica los 3 failure modes más probables, escribe el runbook en Markdown con pasos de diagnóstico y mitigación." El resultado, con iteración, es material productivo. Pero revísalo — los runbooks incorrectos son peor que no tener runbook, porque le das al on-call una falsa confianza.</p>
+    </div>
+  </section>
+
+  <!-- §12 -->
+  <section class="lesson" id="s12">
+    <span class="sec-num">§12</span>
+    <h2>Agents Week · <em>15 abril 2026</em></h2>
+    <p class="tagline">Lo que cambió esta misma semana — documento escrito el día del tercer anuncio.</p>
+
+    <p class="lede">Este documento se escribe el 15 de abril de 2026, tercer día de Agents Week 2026. Los tres días han sido, sin exageración, el evento de producto de plataforma más importante del año en cloud. Lo resumimos porque es lo que más probablemente no está en ningún tutorial todavía.</p>
+
+    <h3>Lo del día 1 (13 abril)</h3>
+
+    <ul>
+      <li><strong>Durable Object Facets</strong> — bases SQLite aisladas por instancia. Pieza clave para multi-tenant y apps-por-usuario.</li>
+      <li><strong>Dynamic Workers</strong> — cargar código generado por IA en runtime, ejecutarlo aislado, persistir estado con Facets.</li>
+      <li><strong>Cloudflare Sandboxes (beta)</strong> — entornos POSIX aislados que persisten estado entre invocaciones.</li>
+      <li><strong>CLI <span class="mono-inline">cf</span> unificado</strong> — reemplazo coherente del patchwork Wrangler + dashboard.</li>
+      <li><strong>Local Explorer</strong> — debug local de D1, KV, DO, Queues sin subir a producción.</li>
+      <li><strong>Cloudflare Mesh + Workers VPC</strong> — acceso zero-trust desde agentes a infra privada.</li>
+      <li><strong>Workflows durables en GA</strong> — con steps persistentes, signals, compensación.</li>
+      <li><strong>Scannable API tokens</strong> — tokens que se detectan automáticamente en leaks.</li>
+      <li><strong>Resource-scoped permissions</strong> — zero-trust interno real, verificable.</li>
+    </ul>
+
+    <h3>Lo del día 2 (14 abril)</h3>
+
+    <ul>
+      <li><strong>Sandboxes GA con identity-aware auth</strong> — TLS interception con CAs efímeras por instancia, allow/deny lists.</li>
+    </ul>
+
+    <h3>Lo del día 3 (15 abril — hoy)</h3>
+
+    <ul>
+      <li><strong>Agents SDK · next edition (preview)</strong> — Think framework, persistencia automática, HITL nativo, scheduling.</li>
+      <li><strong>Agent Lee</strong> — agente IA in-dashboard de Cloudflare, ya sirviendo ~18K usuarios diarios con ~250K tool calls/día.</li>
+      <li><strong>Registrar API (beta)</strong> — compra de dominios programática vía MCP. Pricing at-cost.</li>
+      <li><strong>Browser Run</strong> (ex Browser Rendering) — Live View, HITL, Session Recordings con rrweb, CDP directo, 4× concurrencia.</li>
+      <li><strong>Outbound Workers para Sandboxes</strong> — egress proxy zero-trust con credential injection transparente.</li>
+    </ul>
+
+    <h3>La tesis combinada</h3>
+
+    <p>Lo que Cloudflare está diciendo con Agents Week es que la plataforma cloud del futuro <em>no es una plataforma donde corren apps</em>. Es una plataforma donde viven agentes autónomos que construyen, despliegan, operan y supervisan aplicaciones. Los Workers son funciones; los DOs son memoria; las Queues son comunicación; los Sandboxes son espacio seguro para ejecutar código que ni tú ni Cloudflare escribieron. Y todo está indexado en MCP — accesible a Claude Code, a Cursor, a tu propio agente — desde el primer momento.</p>
+
+    <p>Si esta visión se cumple, y hay razones para creer que sí, el desarrollador del 2027 no escribe código para Cloudflare. Describe intención en un chat, y agentes operando sobre la plataforma hacen el resto.</p>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>Esto es el argumento para aprender Cloudflare <em>ahora</em>. Si esperas un año, la plataforma se moverá tanto que el aprendizaje es ya distinto. Si la aprendes hoy, cada anuncio nuevo se acomoda a un mental model que ya tienes. El oficio de Solutions Architect en esta era es exactamente esto: construir y mantener un mental model que absorbe cambios sin colapsar.</p>
+    </div>
+  </section>
+
+  <!-- §13 -->
+  <section class="lesson" id="s13">
+    <span class="sec-num">§13</span>
+    <h2>Diez arquitecturas <em>de referencia</em></h2>
+    <p class="tagline">No memorizar productos — reconocer patrones.</p>
+
+    <p class="lede">Un Solutions Architect no recuerda los 100 servicios de Cloudflare uno por uno. Recuerda patrones: combinaciones de servicios que resuelven problemas recurrentes. Estas son las diez arquitecturas que cubren el 90% de lo que Eigen construye. Están desarrolladas en detalle en el dossier; aquí las resumimos como taxonomía.</p>
+
+    <ol>
+      <li><strong>Agente conversacional multicanal</strong> — WhatsApp/Email → Worker → Claude + tools → DO(sesión) + Vectorize + Workflows</li>
+      <li><strong>SaaS multi-tenant con código custom</strong> — Workers for Platforms + DO Facets + Cloudflare for SaaS + Access</li>
+      <li><strong>Pipeline analítico edge-nativo</strong> — Pipelines → R2 Data Catalog + Analytics Engine → DuckDB/ClickHouse</li>
+      <li><strong>App-per-usuario generada por IA</strong> — Dynamic Workers + DO Facets + Sandboxes + Outbound Workers</li>
+      <li><strong>Backend híbrido CF + Postgres</strong> — Worker + Hyperdrive → Supabase/Neon + D1 cache + Queues async</li>
+      <li><strong>Intake inteligente de correo</strong> — Email Workers → Claude clasificador → Workflows → Linear/Calendar/Stripe</li>
+      <li><strong>Plataforma AI con MCP público</strong> — MCP server sobre Worker + OAuth + API Shield + rate limiting por tenant</li>
+      <li><strong>Observabilidad agent-native</strong> — Tail Workers → Analytics Engine + Logpush + Sentry + AI Gateway</li>
+      <li><strong>Pagos confiables con idempotencia</strong> — Stripe webhook → Worker verificador → Queue dedupe → DO(customerId) + Workflow dunning</li>
+      <li><strong>Zero-trust internal tools</strong> — Access + Worker + Workers VPC + Mesh → DB privada via Hyperdrive</li>
+    </ol>
+
+    <p>Cada patrón se compone de 5-10 servicios de Cloudflare orquestados con una razón específica. Defender esa razón con trade-offs es lo que separa a un arquitecto de un implementador.</p>
+
+    <div class="ai-lens">
+      <div class="lens-label">Bajo el lente de IA</div>
+      <p>Cuando le pides a Claude Code "construye el sistema X", sin patrón de referencia, la salida es accidental — a veces buena, a veces torpe. Cuando le das el patrón ("usa la arquitectura #1 con Claude como modelo y WhatsApp como canal"), la salida es predecible y defendible. Los patrones son tu vocabulario para pedirle bien. Memorizalos.</p>
+    </div>
+  </section>
+
+  <!-- §14 -->
+  <section class="lesson" id="s14">
+    <span class="sec-num">§14</span>
+    <h2>Construir con <em>Claude Code</em> sobre Cloudflare</h2>
+    <p class="tagline">La sección que resume el oficio actual — cómo se trabaja en 2026.</p>
+
+    <p class="lede">Si llegaste hasta aquí, entiendes la plataforma. Falta la disciplina de construir sobre ella con IA como copiloto. No hay receta mágica. Hay prácticas repetibles.</p>
+
+    <h3>Configuración del entorno</h3>
+
+    <p>Cada proyecto de Eigen tiene un <span class="mono-inline">CLAUDE.md</span> en la raíz que carga:</p>
+
+    <ul>
+      <li>Una línea sobre qué hace el proyecto.</li>
+      <li>Referencia al manifesto Eigen (doctrina técnica global).</li>
+      <li>Desviaciones del stack default (si aplica).</li>
+      <li>Skills a cargar (ej. <span class="mono-inline">cloudflare-workers-patterns</span>, <span class="mono-inline">eigen-testing</span>).</li>
+      <li>Comandos críticos (<span class="mono-inline">bun dev</span>, <span class="mono-inline">bun test</span>, <span class="mono-inline">cf deploy</span>).</li>
+      <li>Zonas sensibles que requieren aprobación humana (pagos, migraciones, auth).</li>
+    </ul>
+
+    <p>Claude Code lee este archivo al inicio de cada sesión. Con MCP oficial de Cloudflare activado, tiene acceso inmediato a ~3,000 operaciones del API — puede crear Workers, desplegar, consultar D1, revisar logs, todo desde conversación.</p>
+
+    <h3>El loop obligatorio (spec-first)</h3>
+
+    <ol>
+      <li><strong>Brainstorming</strong> — entender intent, requirements, trade-offs. No código todavía.</li>
+      <li><strong>Plan escrito</strong> — Markdown con qué, dónde, cómo, tests, rollback. Revisado por humano.</li>
+      <li><strong>Implementación asistida</strong> — con el plan en mano, Claude genera, tú revisas, iteran.</li>
+      <li><strong>Verificación</strong> — tests, smoke manual, correlation IDs en logs, métricas.</li>
+      <li><strong>Review humano</strong> — otro par de ojos, siempre.</li>
+    </ol>
+
+    <h3>Qué aprueba siempre un humano</h3>
+
+    <p>Arquitectura, invariantes de negocio, cambios de prompt productivo (requieren evals), irreversibles (DB migrations destructivas, cambios de auth), cualquier cosa que toque dinero.</p>
+
+    <h3>Red flags al aceptar output de IA</h3>
+
+    <table class="cmp">
+      <thead>
+        <tr><th>Síntoma</th><th>Interpretación</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Tests pasan pero no validan invariante</td><td>Silent failure — rechazar</td></tr>
+        <tr><td>Try/catch que traga errores</td><td>Tapa un bug — pedir handling explícito</td></tr>
+        <tr><td>Abstracciones preventivas</td><td>Over-engineering — simplificar</td></tr>
+        <tr><td>Cambios fuera del scope del plan</td><td>Scope creep — separar o rechazar</td></tr>
+        <tr><td>Imports o deps no justificadas</td><td>Dependencia fantasma — cuestionar</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Prompts productivos: código, no strings</h3>
+
+    <p>En Eigen los prompts productivos viven en <span class="mono-inline">/prompts/*.ts</span>, con template + Zod schema del input. Se versionan con el repo. Se cachean (prompt caching de Anthropic). Se evalúan con suites reales. Un cambio de prompt sin evals actualizadas se rechaza en review como cualquier otro bug.</p>
+
+    <h3>El cierre</h3>
+
+    <p>En 2026, la productividad de un ingeniero se mide en <em>intención por minuto</em>: qué tan rápido traduces "necesitamos que X pase" a un sistema funcional. Claude Code multiplica ese factor. Cloudflare lo multiplica otra vez porque las primitivas son cohesivas — no tienes que aprender AWS IAM para desplegar un Worker con acceso a D1.</p>
+
+    <p>Pero la multiplicación solo funciona si tú tienes algo que multiplicar. Criterio arquitectónico, comprensión de trade-offs, disciplina de proceso, capacidad de revisar código con escepticismo productivo — esas son las constantes. Las herramientas cambian cada año; esas habilidades son las que te hacen relevante en 2027, 2028, 2030.</p>
+
+    <p>Ahí termina la clase. A partir de aquí, la plataforma es tu entorno y Claude Code es tu compañero. El trabajo real empieza.</p>
+
+    <div class="callout">
+      <strong>Invitación final</strong>
+      Si lees esto como estudiante del programa Semestre Tec con Eigen Atlas, entiende que no buscamos ingenieros que "usen IA". Buscamos ingenieros que sepan cuándo NO usarla, qué pedirle bien, cómo revisar lo que produce, y cómo construir sistemas que sobreviven al cambio de modelo. La plataforma Cloudflare es el lienzo. Tu criterio es el pincel. Nos vemos del otro lado.
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <span>Eigen · Clase magistral de Cloudflare · <em>para el Programa de Socio Formador del Semestre Tec</em></span>
+    <span>v1 · 15 abril 2026 · <a href="./eigen-retos-tec.html">↩ dossier</a> · <a href="./eigen-curriculum-cloudflare.html">plan de estudios</a></span>
+  </footer>
+
+</main>
+</body>
+</html>
