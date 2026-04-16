@@ -388,7 +388,7 @@
   <header class="masthead">
     <div class="brand">Eigen<em>.</em></div>
     <div class="masthead-meta">
-      Clase magistral · v1 · 15 abril 2026<br>
+      Clase magistral · v1.1 · 16 abril 2026<br>
       <a href="./eigen-retos-tec.html">↩ dossier</a> · <a href="./eigen-curriculum-cloudflare.html">plan de estudios</a>
     </div>
   </header>
@@ -1012,7 +1012,7 @@ const results = await env.INDEX.query(queryEmbedding, {
       <li><strong>Sandboxes GA con identity-aware auth</strong> — TLS interception con CAs efímeras por instancia, allow/deny lists.</li>
     </ul>
 
-    <h3>Lo del día 3 (15 abril — hoy)</h3>
+    <h3>Lo del día 3 (15 abril)</h3>
 
     <ul>
       <li><strong>Agents SDK · next edition (preview)</strong> — Think framework, persistencia automática, HITL nativo, scheduling.</li>
@@ -1020,6 +1020,18 @@ const results = await env.INDEX.query(queryEmbedding, {
       <li><strong>Registrar API (beta)</strong> — compra de dominios programática vía MCP. Pricing at-cost.</li>
       <li><strong>Browser Run</strong> (ex Browser Rendering) — Live View, HITL, Session Recordings con rrweb, CDP directo, 4× concurrencia.</li>
       <li><strong>Outbound Workers para Sandboxes</strong> — egress proxy zero-trust con credential injection transparente.</li>
+    </ul>
+
+    <h3>Lo del día 4 (16 abril — hoy)</h3>
+
+    <ul>
+      <li><strong>Project Think</strong> — primitivas del Agents SDK para agentes long-running: durable execution con fibers (crash recovery), sub-agents aislados, persistent sessions con mensajes tree-structured, sandboxed code execution, <em>execution ladder</em> de 5 tiers (Workspace → Dynamic Worker → npm → browser → OS-full sandbox), self-authored extensions. El patrón "el LLM escribe UN programa" redujo tokens de Cloudflare's propio MCP 99.9% vs secuencia de tool calls.</li>
+      <li><strong>AI Search</strong> — primitiva de búsqueda administrada para agentes, con hybrid retrieval + relevance boosting. Integra Vectorize, AI Gateway, R2, Browser Run y Workers AI. La evolución natural de AutoRAG con control más fino.</li>
+      <li><strong>AI Gateway · unified inference layer</strong> — un endpoint, 14+ providers (Anthropic, OpenAI, Google, Groq, Replicate, Mistral, Workers AI, etc.), dynamic routing, caching, rate limiting, observability. El nuevo binding de Workers permite correr modelos de terceros como nativos.</li>
+      <li><strong>Artifacts (beta)</strong> — storage versionado Git-compatible built para agentes. Millones de repos, fork desde cualquier remote, accesible con cualquier Git client. La respuesta a "GitHub no escala para agentes que generan código".</li>
+      <li><strong>Cloudflare Email Service · public beta</strong> — Email Routing (entrante) + Email Sending (saliente) unificados. Reemplaza Postmark/Resend/SendGrid con primitivas nativas de CF. Email para agentes que mandan reportes, agendan, responden automáticamente.</li>
+      <li><strong>PlanetScale Postgres + MySQL</strong> — partnership directa. Conexión auto con Hyperdrive desde dashboard. Connection pooling + query caching distribuido sin config.</li>
+      <li><strong>Custom LLM inference stack</strong> — Cloudflare publica cómo construyó el stack para servir LLMs rápido en su red. Engineering trade-offs, optimizaciones (continuous batching, speculative decoding, KV cache), números reales.</li>
     </ul>
 
     <h3>La tesis combinada</h3>
